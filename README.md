@@ -1,5 +1,4 @@
-**The First Computers I Programmed**
-*David A. Butterfield*
+**The First Computers I Programmed** -- *David A. Butterfield*
 
 * * *
 1969 The Original Digicomp
