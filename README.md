@@ -1,6 +1,4 @@
-<center>
-<b>The First Few Computers I Programmed</b> &mdash; <em>David A. Butterfield</em>
-</center>
+**The First Few Computers I Programmed** &mdash; *David A. Butterfield*
 
 <b>1969: The Original Digicomp</b> &mdash; plastic computer with programs specified by placement of white plastic tubes    
 <SMALL><em>It could add or count from zero to seven; clock cycled manually using white tab at far right</em></SMALL>    
