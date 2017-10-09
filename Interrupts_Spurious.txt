@@ -1,0 +1,24 @@
+Comment from a tech writer (Judy) admonishing developers for being too nerdy on
+a wide-audience Sun internal newsgroup, where we had been discussing Intel 8259
+spurious interrupt behavior:
+
+    Oh Developers wise, I am curious
+    As you type back and forth fast and furious
+	You have carefully figured
+	The interrupts edge-triggered
+    Now can we dispense with the interrupts spurious?
+
+My reply a few minutes later:
+
+    Many old hackers are prone
+    To rattle and prattle and drone
+	About subjects arcane
+	We're a journeyman's bane
+    But it's useless to whimper and moan
+
+    The subject's a real confuser
+    It wasn't put there to amuse 'er
+	But maybe it ought to
+	It isn't her lot to
+    Explain it at all to the user
+

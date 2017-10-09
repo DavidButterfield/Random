@@ -1,0 +1,22 @@
+Dark Side of the SAN
+By DAB, with apologies to Mr. Floyd*
+
+Ticking away the snapshots that make up a dull day
+Fritter and waste the space in an offhand way
+Installing a FOM [1] on some space that you glom from its home SAN [2]
+Waiting for someday a quorum that's short by a man
+...
+
+And then one day you find alarms going off behind you
+No one told you where to run, this day will be no fun
+
+You get a call from The Man, "Hey buddy speed up that SAN", but it's syncing
+Racing around the subnet for most of a day
+The SAN is the same in some 'eventual' way but you're older
+Wishing for death and muttering under your breath.
+
+----------------------------------------------------------------
+* There is no Mr. Floyd really... matter of fact it's all Floyd.
+
+[1] Fail-Over Manager arbitrates quorum loss for an even number of cluster nodes
+[2] A useful exercise is to understand why that is not a good idea
