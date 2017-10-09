@@ -5,8 +5,8 @@ spurious interrupt behavior:
     Oh Developers wise, I am curious
     As you type back and forth fast and furious
 	You have carefully figured
-	The interrupts edge-triggered
-    Now can we dispense with the interrupts spurious?
+	The interrupts, edge-triggered
+    Now can we dispense with the interrupts, spurious?
 
 My reply a few minutes later:
 
