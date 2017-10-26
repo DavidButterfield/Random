@@ -4,7 +4,7 @@
 <SMALL><em>It could add or count from zero to seven; clock cycled manually using white tab at far right</em></SMALL>    
 ![1969 Digicomp](https://github.com/DavidButterfield/Random/blob/master/Digicomp.jpg "1969 Digicomp plastic digital computer")
 
-<b>1973: Compucorp 025E Desktop 'Programmable Calculator'</b> &mdash; full assembly language computer    
+<b>1973: Compucorp 025E Desktop 'Programmable Calculator'</b> &mdash; full machine-language computer    
 <SMALL><em>
 While a high-school junior I wrote the program my school used to compute student Grade Point Averages    
 (Today I would know enough to warn them they should check mine by hand, but it didn't occur to me at the time)    
