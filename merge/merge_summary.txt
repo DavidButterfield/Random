@@ -1,0 +1,103 @@
+Here is a brief technical summary OS-Merge and how it works.  OS-Merge
+was designed and written by Locus Computing Corporation in Santa
+Monica, California.
+
+OS-Merge is a system that allows a DOS process to "run under UNIX".
+OS Merge can be implemented in multiple ways.  Some examples are (1)
+run DOS and UNIX on the same 80286 processor, (2) run UNIX on some
+processor and run DOS on a 8086/8088/80186/80286 coprocessor.  The
+particular implementation of OS-Merge on the AT&T PC 6300 PLUS has DOS
+and UNIX running on the same 80286 processor, with DOS running in
+real-address mode and UNIX running in protected mode.  On the 6300
+PLUS, there is additional hardware support, called the CONTROL
+hardware, that prevents the DOS program (which is running in an
+otherwise unprotected environment) from exceeding its bounds and
+possibly damaging the UNIX environment.  By running the DOS
+environment in real address mode, the application can run at full
+speed without the system having to perform any address mode emulation.
+
+At the heart of the system is Locus's PC-Interface system, which is a
+"bridge" from DOS to UNIX.  The Bridge intercepts DOS system calls,
+examines them, and passes some of them on to DOS, and passes the rest
+of them to a Server process which is running on the UNIX system.  The
+Server interprets the DOS system calls, and services them by executing
+UNIX system calls to the UNIX kernel.
+
+        .-----------------.
+        | DOS Application |
+        `-----------------'
+                 |
+        .-----------------.   network   .-----------------.
+        |     Bridge      |-------------|     Server      |
+        `-----------------'             `-----------------'
+                 |                               |
+        .-----------------.             .-----------------.
+        |     MS-DOS      |             |   UNIX Kernel   |
+        `-----------------'             `-----------------'
+
+To the application, the entire UNIX filesystem appears as an
+additional DOS drive.  For example, if the MS-DOS system had a floppy
+and no hard disk, the UNIX filesystem would probably appear as drive
+C:, and you could "cd \usr\dave" on that drive.  This is transparent
+at the DOS system call level, so DOS applications can automatically
+take advantage of the UNIX file service.
+
+In OS-Merge, the "network" above becomes shared memory, and both the
+DOS enviroment (with the Application, the Bridge, and MS-DOS) and the
+UNIX environment (with the Server and the Kernel) run on the same
+machine.  When the Bridge needs service from UNIX, it changes the
+processor to protected mode and passes control to the Server.  After
+the Server has serviced the request, it changes the processor back to
+real address mode and returns control to the Bridge.  Of course,
+interrupts can also require processor mode switches.  Also, UNIX
+timesharing is in effect, so the UNIX scheduler can preempt the
+Server/DOS process to run other UNIX processes in the normal way.
+
+The CONTROL hardware prevents the DOS application from writing on
+memory outside its bounds, and also prevents it from writing
+inappropriate values to I/O ports.  In addition, a Sanity Timer
+prevents the application from disabling interrupts for a long period
+of time  For example, the following code fragment will not harm the
+system:
+
+        cli
+        mov     ax, 0ffh
+        mov     dx, 021h
+        out     dx, ax
+        hlt
+
+Note however that the DOS application may mask off interrupts for
+devices that DOS currently controls.
+
+The user can choose to run DOS programs either from the UNIX shell
+prompt (actually the UNIX exec system call) or from the DOS command
+interpreter (actually the DOS exec system call).  The UNIX exec system
+call recognizes DOS programs and causes an OS-Merge Server to be
+invoked.  The Server sets up the DOS environment and then passes the
+necessary information to it so that it will run the program requested
+by the user.  Execing a DOS program is transparent at the UNIX system
+call level; the shell is unmodified.  In fact, no UNIX programs except
+the kernel were modified to support OS-Merge.  Shell scripts and
+makefiles may freely execute dos programs.
+
+For programs that are "well behaved" (by which I mean that they do
+their I/O through DOS system calls) the standard output of the DOS
+application program is passed to the standard output of the Server.
+The standard input is similarly redirected.  This means that pipes and
+redirection work with UNIX programs.  For example, the command
+
+        $ dir a: | grep FOO
+
+works as expected.
+
+Programs that write directly to the screen also work, but cannot feed
+a UNIX pipe (or a DOS one for that matter).
+
+OS-Merge is currently only available on the AT&T PC 6300 PLUS.
+
+				David Butterfield
+				Locus Computing Corporation
+				3330 Ocean Park Blvd
+				Santa Monica, California  90405
+				lcc!dave@ucla-cs
+				Oct 24, 1985

@@ -1,0 +1,2395 @@
+.\" SCCSID @(#)Mxdoc	1.2                    Modified: 08:45:11   12/2/87
+.\"
+.\" To print this document, type "eqn Mxdoc | tbl | psroff"
+.\"
+.so /usr/lib/tmac/tmac.X
+.en
+.ds Be ''%''
+.ds Bo ''%''
+.nr ft 1
+.ls 1
+.nr su 1
+.PS +2
+.EQ
+delim $$
+gsize 12
+.EN
+.ft B
+.sc - "A BEGINNER'S GUIDE TO NROFF AND TROFF AND THE mX MACRO PACKAGE"
+.ce 2
+\fBA BEGINNER'S GUIDE TO NROFF AND TROFF
+AND THE mX MACRO PACKAGE\fR
+.sp
+.ft R
+.ce100
+by 
+George Ann Hornor\(dg
+Word Processing Center 
+UCLA School of Engineering and Applied Science
+.sp
+.ce 0
+.fn
+\(dgEdited by
+Baron Grey, UCLA Computer Science Department.
+.ef
+.pp
+Nroff and troff\(dg\(dg
+.fn
+\(dg\(dg``Itroff'' is a special version of troff used by the
+UCLA Computer Science Department for generating output
+compatible with an $ roman bold Imagen sup TM$ laserprinter.
+.ef
+are the computer programs
+used by the UNIX system to format text
+in any chosen style, whether it be a simple letter,
+a technical paper, a printed form or a manuscript
+for a book.
+Nroff is used for the printers and
+typewriter-like devices and troff is used 
+for typesetting or laserprinting.  
+Unless you have access to a phototypesetter
+or a laserprinter you will only need to learn nroff,
+however the two programs are identical in
+most respects.
+The user prepares an input file
+containing
+.ul
+text
+that will eventually be printed,
+and
+.ul
+requests
+that give instructions telling
+how the text is to be printed.
+This input 
+is then processed by the program and
+a beautiful formatted document is produced.
+.pp
+Basically, nroff and troff work by collecting
+the words from your input lines, filling
+output lines with those words,
+and automatically breaking pages.
+In addition, they can also
+center lines,
+indent paragraphs,
+number pages, put in footnotes, and
+so forth.
+The input lines mentioned above and
+throughout this document refer to the
+lines as they are typed on your terminal.
+The output lines are the lines actually
+printed after the formatting has been done.
+.pp
+The same commands are accepted by both programs so
+papers being typeset are sent through nroff
+for proofreading purposes
+before the final version is typeset.
+Note, however, that horizontal and vertical distances in
+nroff and troff are not necessarily the same; you may format
+a document in nroff which looks quite acceptable yet is
+totally unacceptable in troff. The reason has to do with the
+much higher resolution of troff output devices (typesetters
+and laserprinters) compared with nroff output devices
+(typewriters, CRTs, and lineprinters.) See the subsection
+entitled \fIUnits of Measurement\fP on page 6 for additional
+explanation.
+It is a good practice to prepare your documents for troff;
+nroff will simply ignore what it does not understand or
+can't handle.
+.pp
+Both programs offer 
+options
+so that you have some flexibility in
+controlling the style of
+the output.
+You can see from the options offered
+that you may use a different option
+each time you print your file.
+Also, you may use more than one option
+at a time.
+.pp
+The command for using nroff is:
+.sp .5v
+.ce
+nroff [\-options] file1 file2 file3 etc
+.sp .5v
+or for troff:
+.ce
+troff [\-options] file1 file2 file3 etc (for output to a phototypesetter)
+.ce
+itroff [\-options] file1 file2 file3 etc (for output to a laserprinter)
+.sp
+The options are:
+.nr sn 1i
+.nr so 1i
+.sp .5v
+.ce
+NROFF, TROFF, and ITROFF
+.l1
+.le
+\fB\-o\fIN\fR	\fRprint only the pages numbered \fIN\fR
+.sp .5v
+.nr sp 0v
+.l1
+.le
+\fB\-o1	\fRwill print page 1 only
+.le
+\fB\-o\-3	\fRwill print pages 1 through 3
+.le
+\fB\-o3\-	\fRwill print from page 3 to the end
+.le
+\fB\-o3\-6	\fRwill print from page 3 through page 6
+.le
+\fB\-o3,6,8	\fRwill print pages 3, 6 and 8
+.e1
+.e1
+.nr sp 1v
+.l1
+.le
+\fB\-n\fIN\fP	\fRnumber the first generated page \fIN\fP
+.le
+\fB\-s\fIN\fP	\fRstop every \fIN\fP pages.  This allows you to 
+insert new paper in the typewriter-like devices or
+to change typesetter cassettes.
+With nroff you hit a newline
+or linefeed (\c
+\fInot\fR
+the return)
+to resume printing when you are ready.  
+With troff, you hit the start button
+on the typesetter. This option should not be used when
+output is directed to a laserprinter (i.e., with itroff).
+.le
+\fB\-m\fIName\fP	\fRcalls up a macro file \fB/usr/lib/tmac/tmac.\fIName\fR.
+This option
+\fIcannot\fR
+be used
+if you have used the ``\fB.so ...\fP'' 
+command to read this file at the beginning of your input file.
+.e1
+.sp
+.ne 6
+.ce
+NROFF ONLY
+.l1
+.le
+\fB\-T(name)	\fRspecifies the name of the output
+terminal.
+The terminals currently available are:
+.sp .5v
+.nr sp 0v
+.l1
+.le
+\fB\-T450	\fRthe black diablos or spinwriter - 10 pitch
+.le
+\fB\-T450\-12	\fR	" 	 - 12 pitch
+.le
+\fB\-T300s	\fRthe white diablos  - 10 pitch
+.le
+\fB\-T300s\-12	\fR	" 	 -12 pitch
+.le
+\fB\-Tnec\-12	\fRthe spinwriter with the Greek thimble   
+(always use 12 pitch)
+.le
+\fB\-Tdumb	\fRline printers, CRT terminals, or others
+without special features.  Do not use this if
+your document contains tables or equations.
+.le
+\fB\-Tcol (\-12)	\fRa special terminal type that is
+used only with the programs
+\fBcol\fR or \fBcolcrt\fR for previewing
+complicated documents on dumb terminals.
+(See the attachment, ``Previewing documents''.)
+.e1
+.e1
+.nr sp 1v
+.sp
+.ce
+TROFF ONLY
+.l1
+.le
+\fB\-a	\fRcreates an approximation of the typeset version
+that can be viewed on a terminal.
+The positions of the characters are roughly preserved
+so that you can see where pages and sections are going
+to appear in the final output.
+This permits you to do some adjusting
+to get rid of orphan lines, etc.
+.le
+\fB\-b	\fRwill tell you if the typesetter is busy.
+.le
+\fB\-f	\fRdoes not feed out extra paper or stop typesetter
+at the end of the run.
+This saves time and paper when you are
+running a few scattered pages from a document.
+.le
+\fB\-t	\fRdirect the output to the standard output
+rather than to the typesetter
+so the troff output can be sent to a file.
+.e1
+.sp
+.ce
+ITROFF ONLY
+.l1
+.le
+\fB\-a	\fR(same as in troff).
+.le
+\fB\-t	\fR(same as in troff).
+.le
+\fB\-q37	\fRsend the output to the laserprinter in
+Room 3731.
+.le
+\fB\-q35	\fRsend the output to the laserprinter in
+Room 3532.
+.e1
+.sp
+.su "The Word Processing Quick Reference Card" 1
+.pp
+This guide is supplemented by a 
+.ul
+Word Processing Quick Reference Card,
+which is a brief summary of commands used
+by the \fBvi\fR editor and the commands in
+this document that are used most frequently.
+This card can be kept by your terminal and
+referred to quickly.  
+.ft B
+.sc + "USING NROFF OR TROFF\(dg AND THE mX MACRO PACKAGE*"
+.sp
+.ft R
+.fn
+\(dgItroff is just a special way of invoking troff so that
+output is automatically directed to a laserprinter instead
+of a phototypesetter. Throughout the rest of this discussion
+no further distinction will be made between troff and
+itroff. If you plan on using a laserprinter, mentally
+replace all references to troff with itroff, and all
+references to phototypesetter or typesetter with laserprinter.
+.ef
+.fn
+*The commands in this document are taken either from the macro
+package, mX, or from the
+.ul
+NROFF/TROFF User's Manual 
+and no attempt is made to distinguish
+the macros from the nroff commands.
+This guide is not intended to be a complete
+reference manual and I have attempted to
+avoid technical terms unfamiliar to
+users without programming knowledge.
+For complete documentation
+see the files, /usr/lib/tmac/mX/tmac.Xlong,
+/usr/lib/tmac/tmac.Xtras,
+and the
+.ul
+NROFF/TROFF User's Manual.
+.ef
+.su "Using the mX Macro Package" 1
+.pp
+Nroff and troff would be much too
+time consuming to use
+in preparing manuscripts without
+further refinement.
+.ul
+Macros
+are nroff/troff commands 
+grouped together to perform
+a particular task.
+Paragraphs, lists and footnotes
+are some of the details created by defining macros.
+You could take it upon yourself to design your own macros,
+but again you would find this a painful process,
+.ul
+(very painful indeed!)
+so several ``canned'' packages are
+available on the system
+to greatly simplify document
+preparation.
+.pp
+The \fBmX\fP macro package was
+written at UCLA by Bruce Walker and is
+used by the secretarial staff of the Computer
+Science Department
+for correspondence and manuscript preparation,
+as well as by many students
+for thesis and dissertation preparation.
+Other macro packages such as
+mm, me and ms are also available, but because
+mX was developed at UCLA,
+it fits our needs nicely and
+you will be able to obtain more assistance
+from more users than with the other packages.
+.su "The mX Formatting Style" 1
+.pp
+Briefly, mX begins with the following formatting style.
+It produces double-spaced copy
+on pages 11 inches long.
+There is a one inch top margin, 
+about one and a third inch bottom
+margin and the lines are 6 1/2 inches
+long.
+The right margin is justified (made even)
+and words hyphenated.
+Paragraphs are indented a half inch,
+and a line skipped between them.
+Footnotes are single spaced and
+placed at the bottom of the page.
+Items in a list are indented
+except for the first line and a line
+is skipped between items.
+References are single spaced, with
+a blank line between them.
+Chapters begin on a new page
+and the title is centered.
+Subheadings are underlined 
+or printed in bold type if typeset or laserprinted.
+.pp
+Additional features can be used or
+not, as required. 
+Page numbers can be added;
+space can be saved for figures;
+a Table of Contents and List of Figures can
+be automatically generated; 
+lists can be automatically numbered;
+and the text can be printed in multiple
+columns on a page.
+.pp
+This particular style is suitable for 
+many documents,
+but by no means is it appropriate
+for every case,
+nor was it meant to be.
+Therefore, all of these features can be changed
+at will by the use of control lines.
+.su "A General Explanation of How Things Work" 1
+.pp
+Nroff
+or
+Troff
+input
+consists of text lines which
+are printed, interspersed with
+.ul
+control
+lines which
+are not printed but which
+control
+the format of
+the finished document.
+.pp
+Control lines
+(which are also called command lines)
+begin with a dot (.) or a single quote
+(\(aa), are followed by a one or two character request, and can
+be followed by one or more
+.ul
+arguments.
+The word
+.ul
+argument
+in this manual means a word or number
+which appears on the same line as a request
+and
+which modifies the meaning of that request.
+An argument can be 
+a string of words (in quotes), or frequently
+it is
+a number specifying an amount.
+Each argument can only consist of one ``word''
+and the system sees a new word every
+time it sees a white space (a space, new line,
+or tab).
+When quotes are used around a string of words
+the computer ignores the white spaces and reads everything
+between the quotes (which are called delimiters) as
+one word.
+A new value or meaning can be
+assigned to an argument each time it is used.
+.pp
+This is all much simpler than it seems
+at first glance.
+To illustrate, let us consider some common
+commands:
+.nr sn .5i
+.nr so .5i
+.l1 a
+.le
+The command to begin a new page is \fB.bp\fR.
+It needs no arguments.  You either begin a page
+or you don't.
+.le
+The command to center text is \fB.ce\fR.
+Now more information is needed.  How much text?
+.ce 2
+The command \fB\.ce 2\fR centers the next two input lines.
+\fIce\fR is the two character request and \fI2\fR is the argument.
+.br
+If you only want to center one line,
+it is not necessary to type the ``1''
+because it is the
+.ul
+default.
+A default is the value that is initially assumed
+and is often ``1''.
+.le
+The command to start a new subheading
+is \fB.su\fR
+but you are allowed to make some choices:
+You can type the 
+command \fB.su\fR
+by itself on the line 
+and the next input line (probably the title of the section)
+will be underlined.
+For most documents, this is sufficient.
+However, there is a way (explained later)
+to have nroff/troff automatically print a Table of
+Contents after it prints your document.
+In order to include the section title
+in the Table of Contents,  
+you must modify the meaning of the \fB.su\fR request 
+so the title name can be stored someplace until it
+is needed again.
+Now the title is used as an argument which must be typed
+in quotes on the same line as the command.
+You can also have the Table of Contents indented
+an increasing amount for chapter headings, main sections,
+subsections, etc.
+You may use a second argument to control the
+level of indenting.
+Take, for example, the command
+.ce
+.ft B
+\&.su "1.1.1.1  Section Title" 3
+.ft R
+In this case
+\fI1.1.1.1  Section Title\fR is the first argument
+and
+\fI3\fR is the second argument.
+Now the title will appear indented three levels in the
+Table of Contents,
+and it will be printed in the text in bold face if 
+it is typeset or underlined if it is not.
+.e1
+.sp
+.ul
+.ne 6v
+Units of Measurement
+.pp
+Both nroff and troff are able to 
+move about on the page in any
+direction \(em forward, backward, up or down,
+depending on the capability of the device that will be
+printing your output.*
+.fn
+*This feature is very powerful because
+it enables you to construct 
+all sorts of things that were too difficult
+on a typewriter.
+It means, for instance, 
+that both horizontal and vertical lines
+can be drawn in tables or
+two characters can be moved together to
+construct Greek letters.
+.ef
+The amount of resolution in the motion
+is measured in basic units, \fBu\fP,
+which are extremely small (432 units per inch in troff
+and 240 units per inch in nroff).
+To simplify matters, 
+these units have been converted to scales
+that are familiar to users.
+These scale units
+are:
+.sp
+.TS
+center;
+c c
+c c
+cB l.
+.sp
+Scale
+Notation	Definition
+.sp
+i	\fRinch
+P	\fRPica (1/6 inch)
+m	\fREm (width of letter m in current character size)
+n	\fREn (1/2 of an em) 
+p	\fRpoint (1/72 inch)
+v	\fRvertical line space (adjustable, see page 9)
+.TE
+.sp
+A detailed discussion of the scaling factors and
+resolution can be found on page 8 of the
+.ul
+Nroff/Troff User's Manual.
+It is possible to omit the unit of
+measurement, particularly in nroff,
+because there is a default
+(an initial value that is assumed)
+if no scale is specified.
+However,
+you may encounter problems if you use different
+printers or if your
+document will be typeset eventually.
+.sp
+.ul
+Numerical Notation
+.sp
+Some commands must include a number
+or a specific amount
+in order to make sense 
+and so the number is given as an argument.
+This number or value can either be 
+a value that you set or it can be a number adding to
+or subtracting from the current value.
+In this manual (as well as the
+.ul
+Nroff\|/\|Troff User's Manual)
+the numerical argument following a
+command is either a plain $N$ or
+a $ +- N$.
+The $N$ without the $+-$ simply 
+calls for the
+number of something 
+(the number of lines you want underlined, for instance).
+A $ +- N$ means that the argument 
+is used in any one of the following three ways:
+.l1
+.le
+~\fIN\fR	\fRsets the value to \fIN\fR	 
+.le
+\fB+\fIN\fR	\fRincreases the current value by \fIN\fR
+.le
+\fB\(mi\fIN\fR	\fRdecreases the current value by \fIN\fR
+.e1
+.in +.5i
+.sp
+This can easily be illustrated by the command
+to establish the length of your lines.
+.es
+\&\fB.LL 6i\fR		prints lines 6 inches long
+\&\fB.LL \(mi1i\fR	prints lines 1 inch shorter (now 6\-1~=~5 inches)
+\&\fB.LL +2i\fR	prints lines 2 inches longer (now 5+2~=~7 inches)
+.ee
+.sp
+.in -.5i
+.ul
+Variables
+.pp
+\fBmX\fR was developed to serve the
+needs of as many users as possible.
+This was done by designing many macros with
+features that can be changed if
+your document does not call for the
+standard format style.
+Some of these features that may
+vary from paper to paper are
+the amount a paragraph is indented,
+the amount of space in the margins,
+the amount of space between items in 
+a list, and so on.
+You can see that the thing that varies
+in all of these features 
+is an
+.ul
+amount.
+These amounts are established initially
+or changed by
+.ul
+number registers.
+Although the term sounds very technical,
+a register is simply a place the computer stores
+information that it needs to make decisions.
+The expression, number register, means the place
+numbers are stored.
+Each macro uses different number registers
+(created by the \fB.nr\fR command)
+to store the numbers 
+used to specify the amounts discussed above.
+In this document, 
+the commands to change these
+variable amounts are shown
+after the explanation of each macro.
+It is important to remember that
+these variables must be changed
+.ul
+before
+the macro is used.
+.su "Calling up mX" 1
+.pp
+mX can be invoked in 
+two different ways.
+It can be used as an option \fB\-mX\fP in nroff or troff
+or it can be called up
+at the beginning of each file.
+.pp
+Experienced users find it helpful
+to create a special ``macro file''
+to supplement mX.
+The file, tmac.X, is called up on the first
+line of this special macro file.
+The rest of the macro file consists of
+commands which change the
+variables or special definitions.
+For instance, this file
+could set the initial line spacing
+to single spacing and automatically put page numbers on each
+document.  
+It could define
+a macro to construct
+diacritical marks, such as
+an umlaut, or special equation characters.
+An example of this type of file is in Appendix A.
+This macro file
+.ul
+must
+appear before every
+file or list of files that 
+is sent through nroff of troff.
+If you are doing work that requires
+special
+equation characters,
+this type of file is practically
+a necessity.
+When several people work on the
+same project it is
+common practice to make one
+``macro file'' and have all members
+of the group linked* to it.
+This establishes a uniform format
+and enables several people to 
+work on the same document without
+contradictions in style.
+.fn
+*See the \fIUNIX Programmer's Manual entry  LN(1)\fR.
+.ef
+.pp
+Whichever way you choose,
+the \fB.en\fR command must
+be one of the first commands you give nroff
+or troff \fIafter\fR mX has been called.
+This command sets things up properly
+so the text will be printed within
+the margins and footnotes and
+other mX commands will work.
+(This command is normally part of
+the macro file mentioned above 
+so if I have convinced you to use
+a macro file
+it will not be necessary to put this
+command in your other input files.)
+.nr sn 1i
+.nr so 1i
+.l1
+.le
+\&\fB.so \fInewfile	\fRswitch source file.
+This command
+causes nroff/troff
+to stop reading
+the current input file
+and switch to
+\fInewfile\fR.
+After it is finished, 
+nroff/troff returns to read your input file.
+Thus the command
+.ce
+.ftB
+\&.so /usr/lib/tmac/tmac.X
+.ft R
+.sp .5v
+will read mX at the beginning of your file.
+.le
+\&\fB.en	\fRset up the environment.
+Establishes page ``traps'' and header and footer
+settings.
+This macro should be called near
+the start of your file
+but after you make changes in the top or bottom margins.
+.e1
+.sp
+.su "LINES:~~~ Filling, Adjusting and Setting the Length" 1
+.pp
+Normally, in both nroff and troff, 
+the output lines are filled with text
+and the right margin is justified.
+A
+.ul
+break
+interrupts the filling process and forces a new
+line,
+even if the current output line is only
+partially filled.
+Certain command lines beginning with a ``.'' force
+a break while those beginning with ``\|\(aa\|'' 
+override this feature and allow the current
+output line to be filled before the command
+is performed.
+Any line starting with a . or \(aa will not
+appear in your final text.  
+If it is necessary to begin a line
+with a dot (as it was in this document)
+type a ``\\&'' before the dot.
+Input lines should not begin with a blank
+because blank lines or lines beginning with
+a blank cause a break.
+.sp
+.l1
+.le
+.ne 4
+\&\fB.fi	\fRfill.
+Gathers the text and fills the
+output line to the specified length.
+This is the default; if you do not want the lines
+filled use .nf
+.le
+\&\fB.nf	\fRnofill.
+The output lines will appear just as they do on your screen.
+.le
+\&\fB.ad	\fRadjust.
+Justifies the right margin by adding extra spaces between
+words.
+To avoid extra spaces being
+added between any two words or characters, you can
+use the unpaddable blank space character, which is a backslash followed
+by a space.
+For example, to keep extra spaces from being inserted on
+either side of an equal sign type ``\\(space)=\\(space)''.
+The default is adjusted lines; to turn off the adjusting use \fB.na\fR.
+.le
+\&\fB.na	\fRno adjust.
+Leaves the right margin ragged.
+This is usually desirable when typing letters 
+and memos.
+Note, adjust and no adjust have no effect on the length
+of the lines, only on the extra spaces inserted
+to make the right margin even.
+.le
+\&\fB.br	\fRbreak.
+Breaks the current output line after printing
+up to the end of the previous input line.
+In other words, it stops filling 
+this particular line and goes to the next.
+.le
+\&\fB.LL $ +- N$i	\fRline length ($ +- N$ inches).
+\fB\&.LL\fR is a macro.  \fB.ll\fR is the 
+nroff/troff command for line length,
+but \fB.LL\fR changes the line length
+in all environments, such as
+in titles and footnotes,
+as well as in the main body of text.
+The default is 6.5 inches.
+.e1
+.sp
+.su "PAGE CONTROL" 1
+.l1
+.le
+\&\fB.pl $ +- N$i	\fRpage length.
+This is the length of your page including
+the top and bottom margins,
+\fInot\fR
+the length of your text.
+The default is 11 inches.
+.le
+\&\fB.bp	\fRbegin new page.
+Normally the pages break automatically as they
+are filled to the page length.
+This forces the current page to be ejected and begins
+a new one.  This should only be used when you are certain
+a new page should begin.  It is better to use the .ne
+command for continuous text because you may make
+changes later that will affect the page breaks.
+.le
+\&\fB.ne $N$	\fRneed $N$ vertical lines.
+The \fB.ne\fP command keeps
+the next $N$ output lines together.
+Thus, if there are not that many lines
+left on the current page, it forces
+a new page to begin
+before the lines are printed.
+.sp
+.e1
+.su "CENTERING AND UNDERLINING" 1
+.l1
+.le
+\&\fB.ce \fIN\fP	\fRcenter the next \fIN\fP input lines.
+To center several lines without
+counting them, use .ce 100, for instance, and
+then .ce 0 to stop centering.
+.le
+\&\fB.ul \fIN\fP	\fRunderline the next \fIN\fP input lines
+in nroff; switch to the italics
+font in troff.
+Certain characters such as blank spaces
+and punctuation marks are not underlined
+in nroff.
+This can be overridden by the \fBcu\fP command.
+.le
+\&\fB.cu	\fRcontinuous underline.
+This command underlines everything,
+including spaces, in
+one continuous line in nroff and is the
+same as .ul in troff.
+It also makes a ``word'' that cannot be
+divided
+so you may get some very peculiar spacing
+on the previous line as the extra spaces are added to justify
+the margin.
+.e1
+.su "VERTICAL SPACING" 1
+.l1
+.le
+\&\fB.sp \fIN\fP	\fRSpace vertically \fIN\fP
+lines.
+This can also be used to leave a block of
+vertical space by specifying an
+amount.  For example, .sp 4i will leave
+4 inches of blank space.
+.sp
+Warning:
+It will not
+space past the end of a page and it will
+not work at the top of a page unless
+something is printed.  
+This can be a problem if you
+are creating a title page, for example.
+There is a complicated way to overcome
+this, but
+you can fool it and
+force it to leave extra space at
+the top of a page by using the unpaddable
+blank character (backslash space) on the first line, and
+then the .sp command on the next line.
+(Forgive me, Bruce and other purists.)
+.le
+\&\fB.ls \fIN\fP	\fRline spacing.
+(ls 1 for single spacing and ls 2 for double spacing, etc.)
+mX uses double spacing as the default.
+This command controls the
+number
+of 
+.ul
+blank lines
+between the text lines.
+The 
+.ul
+size
+of the space between text lines can also be controlled
+with the command \fB.vs\fR.
+.le
+\&\fB.vs \fINs\fP	\fRSets vertical base-line spacing where
+\fIs\fP is the scale in Picas or points.
+This adjusts the space from the base of one line to the
+base of the next, 
+and this is the amount of space specified by the
+measurement scale indicator \fBv\fR.
+.sp
+In nroff, the default is 1/6 inch
+or 1 Pica
+(the same as a typewriter, 6 vertical spaces to the inch).
+To change
+the vertical spacing, first set the linespacing to ``1''
+to suppress extra blank lines between the text lines,
+then change the vertical base-line size:
+Example \(em  to change to space and a half linespacing:
+.ne 2
+.nf
+	.ls 1
+	.vs 1.5P	(picas)
+To return to single or double spacing, use
+.ne 2
+	.vs 1P
+	.ls 1 (or 2)
+.fi
+Papers with many subscripts or underlined words
+may appear too crowded if they are single spaced
+(on mats, for instance).
+If the \fBvs\fR is set at 1.25P, it looks nicer.
+If you are printing a draft on a line printer,
+nroff will round off the \fBvs\fR to the next
+largest whole number.
+.sp
+Troff measures vertical base-line size in points. 
+Normally in troff, the vertical spacing
+between lines should be slightly larger than
+the point size of the characters being printed.
+The troff default is 10 point characters 
+with 12 point vertical spacing.
+Changes in the character point size will
+usually require changes in the vs; use
+.br
+	\fR.vs \fIN\fPp	where \fIN\fPp is the new point size.
+.sp .5v
+.e1
+.su "PARAGRAPHS" 1
+.l1
+.le
+\&\fB.pp	\fRstart a paragraph.  It skips a space,
+or begins a new page if there is not enough space
+on this page for 2 lines, and indents .5i on the
+first line of the paragraph.
+.sp
+The paragraph style can be changed by
+placing
+the following commands before the \fB.pp\fR command.
+.ne 3
+.l1
+.le
+\&\fB.nr sh \fIn\|\fPv	\fRchange the amount of space between paragraphs
+.le
+\&\fB.nr sf \fIn\|\fPi	\fRchange the amount a paragraph is indented
+.e1
+.e1
+.su "LISTS" 1
+.l1
+.le
+\&\fB.l1	\fRstart a list.*
+.fn
+*Caution: the letter ``l'' and the number ``1'' 
+are not the same character. Lists are started
+with the letter l followed by the number 1.
+and ended by the letter e followed by the number 1.
+Each list entry is preceded by the letters, le.
+.ef
+Lists are composed of block style paragraphs
+which are themselves indented but which
+have labels or tags which are not indented.
+(by the word label, I mean a number, letter or word
+which identifies the item in the list.
+For example, the material you are reading is
+an item in a list, and \fB.l1\fR is the label.)
+There is also an optional argument to automatically
+number your entries:
+.sp .5v
+.nf
+	\fR.l1 1	will automatically number the entries
+	\fR.l1 a	will use letters
+	\fR.l1 i	will use Roman numerals
+.fi
+.sp .5v
+This macro sets new tabs and
+indents the text .5 inches
+further than the current indent.
+.le
+\&\fB.le	\fRlist entry.
+This skips a space and 
+``unindents'' the first line of the entry.
+This must be used before every
+item in your list.
+.br
+If you have not used the optional argument 
+with the ``\fBl1\fR'' command,
+the first line consists of the ``label'' followed by the tab
+character (control i).  Example:
+.ne 2
+.br
+	\fR(1)[control i]The first line of text.  Then
+.br
+	\fRtype in the balance of the entry.
+.br
+If you type the label on a separate
+line, the tab must be followed by a ``\\c''
+to suppress the extra space that nroff
+puts in at the end of an input line.
+.sp
+If you have used the automatic numbering argument above, then
+just start typing your text
+after the \fB.le \fRcommand line.
+The number, followed by a dot
+and the tab are automatically printed for you.
+If you add another item to the list later,
+the numbers or letters will automatically
+be adjusted.
+.le
+\&\fB.e1	\fRend list.  This must be used after your last
+entry.  Lists can be ``nested''
+up to three levels deep
+(as in an outline) 
+if you continue to use ``l1'' without a corresponding ``e1''.
+There must be the same number of lists started as ended or
+you will get an error message.
+.le
+The following commands used before \fB.l1\fR change the standard format:
+.l1
+.le
+\&\fB.nr sp \fIn\|\fPv	\fRchanges the spacing between
+list entries.
+.le
+\&\fB.nr sn \fIn\|\fPi	\fRchanges the amount of space
+used to indent the list
+.le
+\&\fB.nr so \fIn\|\fPi	\c
+\fRchanges the amount of space
+that unindents the first line of each entry.
+.e1
+.sp
+Caution: if you change the indenting change
+both ``sn'' and ``so'' or
+it will really mess up!
+.le
+.ne 4
+\&\fB.es	\fRexample start.  This is used for making short
+lists.  It spaces down,
+indents .5i and turns off the fill mode so
+that the text will appear exactly as it does on your screen.
+.le
+\&\fB.ee	\fRend example
+.sp
+.e1
+.su "CHAPTERS AND SUBHEADINGS" 1
+.l1
+.le
+\&\fB.sc	\fRStart a chapter.
+Begin a new page; space down 1 inch to title.
+This can have 0 or two arguments.
+With no arguments (by itself on the line)
+the next two input lines will be centered.
+If you choose to use the two arguments,
+the first will be a ``+'', a ``\-'', or \fIN\fP where \fIN\fP is the
+chapter number.
+The second argument is the name of the chapter in quotes.
+.sp
+Example:
+.sp
+\&\fB.sc 2 "HOW TO LEARN UNIX"
+.ft R
+.br
+will make a two line title 
+.ce 2
+CHAPTER 2
+HOW TO LEARN UNIX
+.sp
+and it will appear correctly in the Table of Contents.
+.sp
+\&\fB.sc + "HOW TO LEARN UNIX"
+.ft R
+.br
+.in +.3i
+will print the title, HOW TO LEARN UNIX,
+centered in the proper position
+in the text
+and it also will appear in
+the Table of Contents.  
+The words ``Chapter #'' will not be printed either place.
+.sp
+.in -.3i
+\&\fB.sc \- "HOW TO LEARN UNIX"
+.ft R
+.br
+.in +.3i
+will print the name of the title in the Table
+of Contents but not in your text.
+If your title contained more than two lines,
+you would need to center the remaining line or lines
+yourself and
+it would be necessary to use the ``minus''
+argument to put the complete title in the Table
+of Contents.
+.in -.3i
+.sp
+Caution:  If you use the name of the title as an
+argument, you must use a ``+'',``\-'', or chapter number.
+This macro will not accept one argument. 
+.le
+\&\fB.sa	\fRStart appendix.  It works just like .sc but
+the word APPENDIX is printed, rather than CHAPTER.
+.le
+\&\fB.su	\fRstart a new subsection.
+This skips a space or forces a new
+page if less than 1 inch remains on the
+current page,
+then prints the section heading.
+.sp
+There can be 0, 1 or 2
+arguments.  With no arguments or alone on a line,
+the next input line is underlined
+in nroff or typeset in italics.
+If one argument (the name of the subsection in quotes)
+is given,
+it will appear in your text either underlined
+or printed in bold face and also
+saved and printed again in  the Table of
+Contents.  There can also be a 2nd argument 
+controlling the level of indenting in the
+Table of Contents.
+.sp
+.br
+Example:
+.sp .5v
+	\fR.su "Section Title"
+.sp
+is an example of a subheading with one argument, the
+title, which will be underlined in nroff
+or bold face in troff.
+``Section Title'' will also appear in the
+Table of Contents but
+if you are making a Table of Contents,
+you will most likely want it logically indented.
+.ne 5
+This is done by using the second argument:
+.sp .5v
+	\fR.su "1.1.3  How To Make a Subsection" 2
+.sp .5v
+Again, the section heading (along with the section
+number in this case) will be underlined 
+or printed in bold face, and in addition,
+the title will appear
+in the Table of Contents indented 2 levels.
+.sp
+An indented Table of Contents would look something
+like this:
+.e1
+.RT
+.in +1.5i
+.sp .5v
+.nf
+CHAPTER 1	INTRODUCTION
+	1.0	Section Heading
+	1.1
+	1.2
+		1.2.1	Subsection Heading
+			1.2.1.1  Minor Heading
+.in -1.5i
+.fi
+.sp
+.su "AUTONUMBERED CHAPTERS AND SUBHEADINGS" 1
+.sp
+In order to use the requests in this section, the file 
+/usr/lib/tmac/tmac.Xtras must be included \fIAFTER\fR
+\fBmX\fR. For example, the line
+.sp
+\&\fB.so /usr/lib/tmac/tmac.Xtras\fR
+.sp
+placed before the first use of any of these requests will
+suffice.
+.l1
+.le
+\&\fB.cp	\fRStart a chapter.
+Begin a new page; space down one inch to the title.
+This macro expects one or two arguments using the following
+format:
+.sp
+.ce
+\&\fB.cp [chapter #] "title"\fR
+.sp
+where \fBchapter\ #\fR is an optional chapter number and
+\fBtitle\fR (which must be between quotes) is the optional
+title of the chapter. If a chapter number is not given, the
+previous chapter number will be automatically incremented
+and used. Initially, the chapter number is 1.
+.sp
+Example:
+.sp
+\&\fB.cp 2 "HOW TO LEARN UNIX"\fR
+.br
+will make a two line title
+.ce 2
+CHAPTER 2
+HOW TO LEARN UNIX
+.sp
+if .cp is used again without a chapter number, the previous
+chapter number will be incremented. Thus, 
+.sp
+\&\fB.cp "A NEW CHAPTER"\fR
+.br
+will make a two line title
+.ce 2
+CHAPTER 3
+A NEW CHAPTER
+.sp
+In both cases, the information will appear correctly in the
+table of contents.
+.le
+\&\fB.ss	\fRStart an autonumbered subsection (of a
+chapter). This
+request must be used in conjunction with .cp above since
+subsection numbers are keyed on chapter numbers.
+The format of the request is:
+.sp
+.ce
+\&\fB.ss [num] "title"\fR
+.sp
+where \fBnum\fR is optional  and is one of
+-3,-2,-1,+1,1,2,3,4. -1 goes back one level, +1 goes up one
+level, -2 goes back two levels, and 1,2, and 3 are absolute
+level numbers (1 being the lowest level). 
+Not entering \fBnum\fR gives the next subsection at the
+current level. \fBtitle\fR has
+the same interpretation as in .cp except it is now the title
+of a subsection.
+.sp
+Example:
+.es
+\&.ls 1
+\&.cp 2 "This is a Chapter"
+\&.pp
+\&In this chapter we shall discuss ....
+\&.ss 1 "A level 1 subsection"
+\&.ss +1 "A level 2 subsection"
+\&.ss "Next subsection in level 2"
+\&.ss +1 "A level 3 subsection"
+\&.ss "Next subsection in level 3"
+\&.ss +1 "A level 4 subsection"
+\&.ss -1 "Back to level 3"
+\&.ss 2 "Absolute level 2 subsection"
+\&.ss "Next subsection in level 2"
+\&.ss 3 "Absolute level 3 subsection"
+\&.cp "A New Chapter"
+\&.ss "Back to level 1"
+.ee
+would produce the following (some blank lines were deleted
+to make things more compact). The important thing to note is
+the difference between a \fBlevel number\fR and the way the
+subsection is actually numbered.
+.es
+
+
+                            CHAPTER 2
+                        This is a Chapter
+
+     In this chapter we shall discuss ....
+
+
+\fB2.1  A level 1 subsection
+
+
+2.1.1  A level 2 subsection
+
+
+2.1.2  Next subsection in level 2
+
+
+2.1.2.1  A level 3 subsection
+
+
+2.1.2.2  Next subsection in level 3
+
+
+2.1.2.2.1  A level 4 subsection
+
+
+2.1.2.3  Back to level 3
+
+
+2.1.3  Absolute level 2 subsection
+
+
+2.1.4  Next subsection in level 2
+
+
+2.1.4.1  Absolute level 3 subsection\fR
+
+
+
+                            CHAPTER 3
+                          A New Chapter
+
+
+\fB3.1  Back to level 1\fR
+
+.ee
+The table of contents is automatically updated with chapter
+and subsection numbers. Indentation in the table of contents
+is automatic in contrast to the .su request in the previous
+section.
+.le
+\&\fB.se	\fRStart an autonumbered section. This
+request is used exactly as the .ss request above except that
+it is not keyed on chapter numbers. That is, it does not
+have to be used in conjunction with .cp. It is very useful
+for writing papers that do not have chapters. The format is:
+.sp
+.ce
+\&\fB.se [num] "title"\fR
+.sp
+where \fBnum\fR and \fBtitle\fR have the same meanings as in
+\&.ss.
+.sp
+Example:
+.es
+\&.ls 1
+\&.se 1 "A level 1 subsection"
+\&.se +1 "A level 2 subsection"
+\&.se "Next subsection in level 2"
+\&.se +1 "A level 3 subsection"
+\&.se "Next subsection in level 3"
+\&.se +1 "A level 4 subsection"
+\&.se -1 "Back to level 3"
+\&.se 2 "Absolute level 2 subsection"
+\&.se "Next subsection in level 2"
+\&.se 3 "Absolute level 3 subsection"
+.ee
+would produce the following:
+.es
+
+\fB1  A level 1 subsection
+
+
+1.1  A level 2 subsection
+
+
+1.2  Next subsection in level 2
+
+
+1.2.1  A level 3 subsection
+
+
+1.2.2  Next subsection in level 3
+
+
+1.2.2.1  A level 4 subsection
+
+
+1.2.3  Back to level 3
+
+
+1.3  Absolute level 2 subsection
+
+
+1.4  Next subsection in level 2
+
+
+1.4.1  Absolute level 3 subsection\fR
+
+.ee
+.e1
+.su "FOOTNOTES" 1
+.l1
+.le
+\&\fB.fn	\fRstart footnote.
+This collects all text in your footnote and saves it
+for the bottom of the page.  
+It also draws a line above the first footnote on the page.
+The footnote should be typed right after the
+reference to it in the text.
+If you wish to number footnotes on a page by page basis, use
+either \\*N (for superscripting) or \\*O (for [#]) at the
+reference point and at the start of the footnote.
+.le
+\&\fB.ef	\fRend footnote
+.sp
+.e1
+.su "FIGURES" 1
+.l1
+.le
+\&\fB.fg	\fRfull page figure.
+The page on which the figure will appear is skipped but
+the page numbers are adjusted.  There is an optional
+argument, the name of the figure in quotes.  This
+entry will appear in the List of Figures.
+.le
+\&\fB.fs	\fRfigure start.  If there is room on the current
+page, the figure will appear there.  If not, it will
+appear at the top of the next page.
+Space is saved for figures that will be drawn
+later by the \(aasp $ +- N$i command.
+.le
+\&\fB.fe	\fRend figure.  This can also have the name
+of the figure as an argument so that it will appear
+in the List of Figures.
+.sp
+.e1
+.su "REFERENCES\(dg" 1
+.fn
+\(dgThere is a more extensive reference facility available
+via mX than presented here. See the document \fISome
+Applications of Inverted Indexes on the UNIX System\fR by
+\fIM\ E\ Lesk\fR, the online manual entry for \fBrefer\fR,
+and the file /usr/lib/tmac/tmac.Xrefs.
+.ef
+.l1
+.le
+\&\fB.rb	\fRbegin references. 
+This changes the linespacing to single spacing,
+sets new tabs, and indents 10 
+characters in nroff, 8 ems in troff.
+.le
+\&\fB.rf	\fRreference entry.  Use before each entry.
+This skips a space,
+unindents the first line of the entry
+(references are almost like lists),
+and forces a new page if there is less than
+one half inch of space left on the page.
+.le
+\&\fB.re	\fRend references.
+.sp
+The following commands
+used before \fB.rb\fR change the standard format:
+.l1
+.le
+\&\fB.nr se \fIn\|\fP	\fRchanges the amount of space (in m's)
+the entry is indented as well as the
+temporary indent for the first line of each entry.
+.le
+\&\fB.nr sc \fIn\|\fPv	\fRchanges the number of
+lines needed on the current page.
+.e1
+.e1
+.sp
+.su "INDENTING AND TABS" 1
+.l1
+.sp
+.le
+\&\fB.in $ +- N$i	\fRindent is set to $ +- N$ inches
+from the current indent (initially 0).
+It keeps indenting until it is reset.
+.le
+\&\fB.ti $ +- N$i	\fRtemporary indent.
+The 
+.ul
+next
+output line will be indented
+$ +- N$ inches
+with respect to the current indent.
+.e1
+.sp
+.ne 6
+.in +.5i
+Example:
+.sp
+.in +.5i
+.ti -.5i
+This example was made by the following input.
+Note the use of the plus sign to move the
+indentation to the right.
+The temporary indent
+with a minus sign
+then moved the first line only back to the left
+margin.  
+.in -.5i
+After I finished indenting, I moved
+back to the margin
+by using the minus sign to reverse the amount
+that I originally indented.
+.sp
+.ne 12
+.nf
+\&.in +.5i
+\&.ti \-.5i
+This example was made by the following input.
+Note the use of the plus sign to move the
+indentation to the right.
+The temporary indent
+with a minus sign
+then moved the first line only back to the left
+margin.  
+\&.in \-.5i
+After I finished indenting, I moved
+back to the margin
+by using the minus sign to reverse the amount
+that I originally indented.
+.in -.5i
+.fi
+.ad
+.sp
+The tab input character is ``\fBcontrol i\fR''.
+The tab stops are initially set every .8 inches
+in nroff and every .5 inches in troff.
+There are three types of tab stops:
+left adjusted, centered and right adjusted
+(the default is left, just as on a typewriter).
+The tab stops are changed by the
+following commands:
+.l1
+.le
+\&\fB.ta \fINt\fP	\fRset tab stops and types where $N$ is the
+stop value and ``\fIt\|\fR'' is the type. 
+\fIt\|\fR=R for right adjusted, \fIt\|\fR=C for centered,
+and \fIt\|\fR absent for left adjusted.
+The stop values are separated by spaces.
+A stop value preceded by a + increases
+the previous value by that amount.
+As an example,
+.nf
+.in +1i
+\&\fB.ta 1i 1.5i 2.5i 5iR.
+\&\fB^i\fRone\fB^i\fRtwo\fB^i\fRthree\fB^i\fRfour
+.in -1i
+will give the output:
+.ta 1i 1.5i 2.5i 5iR
+	one	two	three	four
+.fi
+.ad
+Note tab stops are measured from the
+current indent.
+.e1
+.RT
+.l1
+.le
+\&\fB.RT	\fRreset tab stops.
+An mX macro that resets the tab stops to the
+standard nroff default.
+.e1
+.su "FONT AND CHARACTER SIZE" 1
+.pp
+This section pertains mainly to troff. 
+Nroff understands the font control
+and will underline the italic characters
+(so it can be useful to underline one letter of a word)
+but it will ignore the type size.
+Some simple commands are given here,
+but a longer discussion can be found
+in the
+.ul
+NROFF/TROFF User's Manual
+and the Bell Labs
+manual,
+.ul
+A Troff Tutorial. 
+The EQN program uses a different 
+method to change size and fonts.
+Read the manual,
+.ul
+Typesetting Mathematics \(em User's Guide
+for instructions on ``gsize'' and ``gfont''.
+.sp
+.ul
+Character size:
+Characters are measured in point size
+(one point is 1/72 inch).
+The default point size is 10, but it
+can be changed to range from 6 points (the smallest)
+to 36.
+.ul
+A Troff Tutorial
+has examples of point sizes on page 2.
+.l1
+.le
+\&\fB.PS $ +- N$	\fRset point size. 
+The troff command \fBps\fR differs
+from the macro \fBPS\fR only in the
+sense that \fBPS\fR 
+makes changes in all environments
+such as footnotes, figures, etc.
+.sp
+Changes in point size can also be imbedded in an input line
+by typing ``\\fB\\\s$N$'' or ``\\fB\\\s$ +- N$''
+.e1
+.sp
+.ul
+Fonts:
+The ``font'' is the type style.
+Four fonts are mounted on the typesetter at one time.
+The normal fonts are Times Roman (R), Times Italic (I),
+Times Bold (B) and the Special Mathematical Font (S).
+The default is Roman.
+These are physically mounted on the typesetter in
+positions 1, 2, 3 and 4 respectively.
+Geneva style fonts are also available and
+are useful for figure notation.
+Font changes are made by the following
+commands or by imbedding the command in
+a line with a ``\\f\|'' followed by the name of the font.
+The font name ``P'' means the previous font.
+For example, to make one word bold, the next roman and
+the next italic you could type
+.ce
+	\fR\\fBSee \\fR Spot \\fIrun\\fP
+and it will appear as
+.ce
+	\fR\fBSee \fR Spot \fIrun\fP
+.sp
+The \\fP after the word ``run''
+switched back to the previous font,
+which was Roman.
+I could also have used \\fR.
+Just be sure you switch back
+to the regular font.
+You can use this same method for underlining
+part of a word in nroff.
+For example, \\fIN\\fPow will produce \fIN\fPow
+in troff or
+$roman N under$ow in nroff.
+.l1
+.le
+\&\fB.ft \fIF\fP	\fRfont changed to \fIF\fP where \fIF\fP is the font name.
+.le
+\&\fB.fp \fIN F\fP	\fRfont position.  This is a statement
+that a font named \fIF\fP is mounted on position \fIN\fP (1 through 3).
+The special font always remains in position 4.
+.e1
+.su "HYPHENATION" 1
+.l1
+.le
+\&\fB.nh	\fRautomatic hyphenation is turned off.
+If a word will not fit entirely on a line, it
+goes to the next.
+.le
+\&\fB.hy 14	\fRthe automatic hyphenation is turned on
+but the ``14'' argument keeps it from splitting off
+two letters or splitting words between pages.
+.sp
+To prevent a particular word from being hyphenated
+type ``\\%'' at the beginning of the word (with no space).
+This is not usually necessary.  
+Nroff is pretty smart!
+However, nroff/troff will still make mistakes when
+hyphenating; you can tell nroff/troff where the correct
+hyphenation points are in a word by typing  ``\\%'' characters
+at these points. For example, the embedded ``\\%'' characters
+in
+.sp
+.PS -2
+.ce
+su\\%per\\%cal\\%i\\%frag\\%il\\%is\\%tic\\%ex\\%pi\\%al\\%i\\%do\\%cious
+.PS +2
+.sp
+will tell nroff/troff exactly where to hyphenate. The \\% will
+not appear in the output.
+.e1
+.sp
+.su "PAGE HEADERS AND FOOTERS" 1
+.sp
+Conceptually, every page of text produced by mX contains a
+\fIheader\fR at the top of the page, and a \fIfooter\fR at
+the bottom of the page. Normally, both the header and the
+footer is a single line consisting of a \fIleft\fR part, a
+\fIcenter\fR part, and a \fIright\fR part. The \fIleft\fR
+part is always left adjusted (flush with the left margin),
+the \fIcenter\fR part is always centered (with respect to
+the length of the header or footer line), and the
+\fIright\fR part is always right adjusted (flush with the
+right margin). Although the \fIleft, center,\fR and
+\fIright\fR parts may overlap, it is best to make sure that
+they do not. The length of the header and footer lines may
+be defined independently of the length of lines on the rest
+of the page (this is accomplished with the nroff/troff .lt
+request).
+.sp
+\fIDefining the Header\fR
+.sp
+In mX, the header is defined using one or more of the
+following requests:
+.sp
+.in +.5i
+\&\fB.ds TL \'\fIleft\fP\'\fIcenter\fP\'\fIright\fP\'
+.sp
+\&\fB.ds Te \'\fIleft\fP\'\fIcenter\fP\'\fIright\fP\'
+.sp
+\&\fB.ds To \'\fIleft\fP\'\fIcenter\fP\'\fIright\fP\'
+.sp
+.in -.5i
+\fRwhere \fIleft, center,\fR and \fIright\fR is anything you
+want left adjusted, centered, or right adjusted in the
+header; if you leave them out (such as .ds TL \'\'\'\'), no
+header will be printed -- if only some are left out, a
+header will be printed with the one's you put in. The ``TL''
+request works on all pages, the ``Te'' request works only on
+even-numbered pages, and the ``To'' request works only on
+odd-numbered pages. Don't mix ``TL'' with ``Te'' or ``To''.
+.sp
+\fILeft, center,\fR and \fIright\fR can be anything
+acceptable to nroff or troff, including interpolated
+strings, font changes, and so on. If a ``%'' character
+appears anywhere in either or all of the three, it will be
+replaced by the page number of the page on which the header
+appears.
+.sp
+\fIDefining the Footer\fR
+.sp
+The footer is defined in exactly the same way as the header
+using one or more of the following requests:
+.sp
+.in +.5i
+\&\fB.ds BL \'\fIleft\fP\'\fIcenter\fP\'\fIright\fP\'
+.sp
+\&\fB.ds Be \'\fIleft\fP\'\fIcenter\fP\'\fIright\fP\'
+.sp
+\&\fB.ds Bo \'\fIleft\fP\'\fIcenter\fP\'\fIright\fP\'
+.sp
+.in -.5i
+.nr sn 1.5i
+.nr so 1.5i
+Examples:
+.in +.5i
+.l1
+.le
+\&\fB.ds BL \(aa\(aa\(aa\(aa	\fRno footer
+.le
+\&\fB.ds TL \(aa\(aa\(aa\(aa	\fRno header
+.le
+\&\fB.ds BL \(aa\(aa%\(aa\(aa	\fRpage number centered at bottom of page
+.le
+\&\fB.ds TL \(aa\(aa\(aa%\(aa	\fRpage number at right top of page
+.le
+\&\fB.ds BL \(aa\(aa-%-\(aa\(aa	\fRpage number with dashes at either side
+centered at the bottom of the page.
+.le
+\&\fB.ds TL \(aa1.%\(aa\(aa\(aa	\fRThe page number 1.\fIn\fR at the top left of
+the $n sup th$ page.
+.le
+\&\fB.ds TL \(aa\(aa\(aadraft\(aa	\fRwill place the word
+``draft'' at the top right corner of the
+page
+.le
+\&\fB.ds Te \'%\'\'\'	\fRWill number even-numbered pages in the top left hand corner.
+.le
+\&\fB.ds To \'\'\'%\'	\fRWill number odd-numbered pages in the top right hand corner.
+.e1
+.nr sn 1i
+.nr so 1i
+.sp
+.in -.5i
+Preliminary pages of dissertations and theses 
+use Roman numerals.
+To change to Roman numerals 
+use the following command after one of the above commands:
+.l1
+.le
+.ne 2
+\&\fB.af % i	\fRmeaning ``assign format''.  (See page
+18 of the
+.ul
+NROFF/TROFF User's Manual.)
+.le
+\&\fB.af % 1	\fRchanges it back to Arabic numbers
+.e1
+.sp
+\fIRedefining Headers and Footers\fR
+.sp
+If you know how to define macros and you don't like the way
+that mX handles headers and footers, mX provides you with an
+opportunity to change things. You can define macros ``.HS'' and
+\&``.HE'' which are called automatically by mX at the start
+and the end of the header, respectively. The same is true for
+macros ``.FS'' and ``.FE'' which are called at the start 
+and end of the footer. Caution: unless you assume that the
+header and footer are each one line, you can really mess up
+the page format. If you must change things, seek the help of
+a wizard.
+.sp
+.su MARGINS 1
+.pp
+Margins are established by different
+methods, depending on the particular margin.
+To make changes you must know how they
+were set in the beginning:
+.sp
+.ul
+left
+.l1
+.le
+\&\fB.po $ +- N $i	\fRpage offset.
+Sets the current left margin.
+(The default is 0; see below)
+.e1
+.sp
+The left margin is normally not
+set until you print the document.
+\fBspeed\fR and \fBtroff\fR
+have a one inch margin by
+default, and \fBprint\fR has an option to
+set the left margin.
+(See the UNIX manual for these programs for more
+explanation.)
+Also, the diablo-type printers can have the
+margins set physically if you are sending
+nroff output directly to the diablo.
+See the manual for your particular device.
+The page offset command above is used for special
+cases, but it causes nroff to run slower.
+.sp
+.ul
+.ne 4
+right
+.sp
+The right margin is controlled by the line length.
+The default is 6.5 inches, which added to the
+one inch left margin, leaves a one inch right 
+margin.
+.sp
+.ne 5
+.ul
+top and bottom
+.sp
+The top and bottom margins are set up by
+the mX package.
+The top and bottom margin can both contain
+``header'' and ``footer'' text, such as page numbers.
+The following commands,
+followed by the \fB.en\fR command,
+change the margin size
+.sp
+To change the top margin:
+.l1
+.le
+\&\fB.nr th $N$i	\fR(total of $N$ inches in top margin)
+.le
+\&\fB.nr bh $N$i	\fR(number of inches to header line if you have one)
+.sp
+Don't forget that the header line
+is inside the margin so ``bh'' must be
+set smaller than ``th''.  Also, you may
+use the unit, \fBv\fR,
+instead of inches. 
+.sp
+.ul
+Caution:
+If you try to shrink the margins 
+too much,
+horrible things happen.
+To be safe use at least 2v for the
+total top
+margin and 1v for the space down to the header.
+.e1
+.sp
+To change the bottom margin:
+.l1
+.le
+\&\fB.nr tf $N$i	\fR(total of $N$ inches in bottom margin)
+.le
+\&\fB.nr bf $N$i	\fR(number of inches from the last line of
+text to your footer line, for instance
+the page number)
+.sp
+Again, the total footer must be larger than the distance from
+the last text line to the footer line and they cannot
+be too small.
+.e1
+.su "MULTIPLE COLUMNS" 1
+.l1
+.le
+\&\fB.MC	\fRrequest for multiple columns.  This macro expects 4 arguments:
+.sp
+.nf
+\fB\(bu~~~~~\fRnumber of columns
+\fB\(bu~~~~~\fRwidth of each column 
+\fB\(bu~~~~~\fRwidth of space between columns
+\fB\(bu~~~~~\fRpage offset of the entire page
+.sp
+.fi
+An example of a multiple column request would be
+.sp .5v
+.ft B
+	\&.MC 2 3.25i .25i 1.0i
+.ft R
+.sp .5v
+This would produce 2 columns, each 3.25 inches wide,
+with 1/4 inch between them and the entire page offset 
+1 inch.
+.sp .5v
+.e1
+.sp
+You may find it is easier to print your text
+without using this macro.
+It is sometimes difficult to
+align the paper exactly in the printers,
+but it is easy
+to print the text
+on oversize paper and then
+paste it on
+the mats.
+.ne 6
+.su "EQUATIONS AND TABLES" 1
+.pp
+``tbl'' and ``eqn'' (for troff) or ``neqn'' (for nroff)
+are programs that pre-process
+tables and equations before
+the text is sent through the nroff or troff
+program.
+The output from each program is piped 
+to the input of the next and must be in
+the following order
+.ne 4
+.ce
+\&\fBtbl file(s) | neqn | nroff \-[options]\fR
+or
+.ce
+\fBtbl file(s) | eqn \-[options] | troff \-[options]\fR
+.sp
+The instructions for using the programs
+\fBtbl\fR
+and
+\fBeqn\fR or \fBneqn\fR can be found
+in the documents
+.ul
+Tbl \(em A Program to Format Tables,
+.ul
+Typesetting Mathematics \(em User's Guide,
+and in the
+.ul
+UNIX Programmers Manual,
+Sections \fIEQN(1), EQNCHAR(7), \fRand\fI TBL(1)\fR.
+.l1
+.le
+\&\fB.EQ	\fRbegin a displayed equation
+.sp
+The mX macro package uses the
+dollar signs as ``delimiters'' for in-line
+equations.
+.sp
+.le
+\&\fB.EN	\fRend a displayed equation
+.le
+\&\fB.TS	\fRbegin a table
+.le
+\&\fB.TE	\fRend a table
+.e1
+.sp
+.su "TABLE OF CONTENTS & LIST OF FIGURES" 1
+.pp
+The Table of Contents and List of Figures 
+are triggered by number registers in mX.
+In this case, the number ``0'' means ``off'' and
+the number ``1'' means ``on''.  The default is
+``off'' meaning neither one will be produced
+unless the 0 in the following commands
+is changed to 1.
+.l1
+.le
+\&\fB.nr ft 0	\fRTable of Contents initialization
+.le
+\&\fB.nr ff 0	\fRList of Figures initialization
+.e1
+.sp
+If you choose to use it,
+the command \fB.nr ft 1\fR will print out
+a Table of Contents at the
+end of your text.  
+The page numbers will be printed in small
+Roman numerals and will begin on page iii.
+(This is required by the UCLA thesis and dissertation
+style manual.)
+Changes in the standard format can be made by 
+the following commands.
+.l1
+.le
+\&\fB.nr su \fIn	\fRchange the first page number 
+of Table of Contents to \fIn\fR.
+.le
+\&\fB.nr ra \fIn\fBv	\fRchange the amount of space
+between the lines, ``Table of Contents'' and ``page''.
+.le
+\&\fB.nr rb \fIn\fBv	\fRchange the amount of space
+between the ``page'' line and the first entry.
+.e1
+.su CORRESPONDENCE 1
+.pp
+Letters and memos can be 
+created and edited with nroff and
+then printed on letterhead paper.
+If you are a less than perfect
+typist 
+(like me, for instance)
+you will appreciate the fact that
+your mistakes won't show.
+It just takes a little creativity
+to develop a particular style for
+each type of correspondence.
+Also, the same letter can be addressed
+to many different people
+and each recipient will have
+an ``original'' letter rather than a 
+copy.
+.sp
+The following instructions can be
+used as a guide for a typical letter:
+.br
+(The comments following \\" are 
+only for your information.)
+.nr sn .5i
+.nr so .5i
+.nr sp 0v
+.ne 10
+.l1
+.le
+\fB\&.ds BL \(aa\(aa\(aa\(aa\fR	\\"turn off page numbering
+.le
+\fB\&.ta 3.25i 6.5iR\fR	\\"set tabs for signature
+line and date (if you want it at the right margin).
+.br
+	If you want block style correspondence, skip this command.
+.le
+\fB\&.na\fR	\\"turn off automatic adjusting so it
+doesn't look like a form letter.
+.le
+\fB\&.nf\fR	\\"print address and salutation exactly
+as typed on screen
+.le
+.sp .5v
+1)	Type the date line, beginning with two
+tabs if you want it at the
+right margin.
+.sp .5v
+.le
+\fB\&.sp \fIn	\fR\\"skip as many lines as you like
+between the date and the address
+.le
+.sp .5v
+2)	Type name and address
+.sp .5v
+.le
+\fB\&.sp\fR	\\"skip a line 
+.le
+.sp .5v
+3)	Type the salutation
+.sp .5v
+.le
+\fB\&.fi\fR	\\"Turn on fill mode for text of letter
+.le
+.sp .5v
+4)	Type the letter, using the paragraph
+command to begin, etc.
+.sp .5v
+.le
+\fB\&.nf\fR	\\"Quit filling lines for closing lines
+.le
+\fB\&.sp\fR	\\"skip a line 
+.le
+.sp .5v
+5)	Type complimentary closing line, preceded
+by a tab if you want it to start at the center.
+.sp .5v
+.le
+\fB\&.sp 4\fR	\\"skip enough space for signature
+.le
+.sp .5v
+6)	Type signature line, preceded by tab
+if it is to start at center.
+.sp .5v
+.le
+\fB\&.sp\fR	\\"skip a line
+.le
+.sp .5v
+7)	Type reference initials, enclosure notation
+and carbon copy notation 
+.sp .5v
+.le
+\fB\&.bp\fR	\\"begin a new page
+.ul
+only
+if you are following this letter by another.
+.e1
+.nr sn 1i
+.nr so 1i
+.nr sp 1v
+.sp
+.su "Repetitive letters" 2
+.pp
+Multiple copies of a form letter are
+prepared by making two files.
+One contains the text of the letter and
+the other a list of the recipients.
+.sp
+.ne 6
+Use the following commands for the
+.ul
+letterfile.
+.sp
+.in +.5i
+.nf
+.ne 18
+\&\fB.na
+\&\fB.nf
+.ft R
+(date line)
+\&\fB .sp
+\&\fB.rd \fI(name and address)
+\&\fB.sp
+\&\fB.rd \fI(salutation)
+\&\fB.sp
+\&\fB.fi
+.ft R
+(text of letter)
+\&\fB.nf
+\&\fB.sp
+.ft R
+(complimentary closing line)
+\&\fB.sp 4
+.ft R
+(signature line)
+\&\fB.bp
+\&\fB.rd
+\&\fB.nx letterfile
+.in -.5i
+.ft R
+.fi
+.sp
+The \fIaddressfile\fR is created 
+.ul
+exactly
+as shown below:
+.sp
+.in +.5i
+.nf
+name and address of first recipient
+1 blank line
+salutation to first recipient
+3 blank lines
+name and address of next recipient
+1 blank line
+salutation to next recipient
+3 blank lines
+name and address of next recipient
+1 blank line
+salutation to next recipient
+3 blank lines
+.sp
+(and so on until all names are included)
+.sp
+Then end the file with the command
+\&\fB.ex
+.ft R
+.in -.5i
+.sp
+.fi
+The UNIX command (at the dollar sign) to
+make an output file is:
+.ce
+.ft B
+.sp .5v
+nroff mac letterfile <addressfile> outputfile
+.ft R
+.sp
+assuming you have a special ``macro'' file
+in the current directory.
+.sp
+.su "TRICKY MANEUVERS" 1
+.pp
+.ad
+This section is more complicated but it
+contains instructions for
+doing some things that I learned by
+begging for help or by 
+deciphering the manuals and sweating alot
+so I included it to save time for others.
+Although you may never need any of these
+items, this
+section may be very helpful some day.
+.sp
+.ul
+.su "Drawing lines" 2
+.pp
+Horizontal lines
+can be drawn any length
+and with any character you like.
+(Yes, it must fit on your page.)
+The default line drawing character
+is the underline character
+and this is normally the one you want
+but occasionally you may want dots or
+x's, for instance.
+.ne 4
+.sp .5v
+To draw a line 1 inch long type
+\fB `` \\l\(aa1i\(aa '' \fRand it will draw a line 
+like this: \l'1i' .
+The length (1i(nch) in the illustration above)
+can be followed by the character you want to use
+in case the \(ul is not appropriate.
+\fB `` \\l\(aa1.5i.\(aa ''\fR will draw a line of dots,
+\l'1.5i.' .
+.sp
+You can also draw vertical lines and even
+put text in a box.
+These feats are difficult enough to require
+help from someone with programming experience,
+but the instructions are on page 21
+of the
+.ul
+Nroff/Troff User's Manual.
+.sp
+.su "Designing forms" 2
+.pp
+Forms can be created by 
+changing the tab stops and tab character.
+Normally when you hit the tab insert character
+(the control i), the tabbed-over space is
+filled with blank spaces.  
+You can replace the blank spaces
+by setting the ``tab replacement character'' with
+the \fB.tc\fR command.
+The following input will produce:
+.sp
+.in +.5i
+.nf
+.ft B
+\&\fB.LL 5i
+\&\fB.ta 2i 5iR
+\&\fB.tc \\(ru       \fI(the input for `` \(ru '')\fR
+\&\fBName (control i) Address (control i)
+.sp
+.ft R
+.LL 5i
+.ta 2i 4.5iR
+.tc \(ru
+Name	Address	
+.LL 6.5i
+.in -.5i
+.ft R
+.fi
+.tc
+.sp
+To reset the tab replacement character to a blank,
+use \fB.tc\fR with no argument.
+.RT
+.sp
+.ul
+Making your own Table of Contents
+.sp
+It may be that the Table
+of Contents that is generated
+automatically is not appropriate for your needs.
+There is a way to get that line of dots
+across your page to the page number column.
+In addition to the tab input character, \fIcontrol i,
+.ft R
+there is also a another input character,
+the ``\fIcontrol a''\fR,
+and it uses dots instead of blanks as the repetition
+character.
+Thus, you can set tab stops and then use \fIcontrol i\fR
+when you want blanks and \fIcontrol a\fR when you want
+dots.*
+.fn
+*Some systems will not accept the \fIcontrol a\fR character
+without a \fIcontrol v\fR in front of it.
+.ef
+.sp
+The following input will produce:
+.in +.5i
+.nf
+\&\fB.nf
+\&\fB.LL 5i
+\&\fB.ta .5i 0.75i  5iR
+.ft I
+control i control i control i \fBPage
+\&\fB.sp
+Chapter 1 \fIcontrol a control a \fB 1
+\fIcontrol i \fBSection 1 \fIcontrol a \fB 18
+\fIcontrol i control i \fBSection 1.1 \fIcontrol a \fB 110
+.ft R
+.sp
+.ne 5
+.LL 5.5i
+.ta .5i 0.75i 5iR
+			Page
+Chapter 1    1
+	Section 1  18
+		Section 1.1   110
+.sp
+.fi
+.RT
+.LL 6.5i
+.in -.5i
+.sp
+.su "Three part title lines" 2
+.sp
+The ``three-part title'' command in nroff/troff makes it possible
+to divide a line into three
+parts.
+.sp
+.in +1.5i
+.ti -1.5i
+\&\fB.tl \fI\(aaleft\(aacenter\(aaright\(aa	\fRText appearing between the
+single quote marks in the
+\fIleft, center,\fR and \fIright\fR
+positions
+is respectively left-adjusted, centered and right adjusted.
+Any of the fields between single quotes
+may be empty and if a % is found between any
+of the single quotes, the page number will be printed.
+.in -1.5i
+.sp
+If this all sounds familiar, 
+this nroff/troff command was used
+in defining the macros that automatically
+paginate.
+However,
+this line can appear any place on a page
+(not necessarily at the top)
+so it can be very useful
+to put something at the right margin without
+changing your tabs.
+.sp
+Example:
+.br
+\&\fB.tl \(aaJACK W. HORNOR\(aaHealth Physicist\(aa(213) 825-2825\(aa
+.ft R
+.sp
+will produce
+.sp
+.tl 'JACK W. HORNOR'Health Physicist'(213) 825-2825'
+.sp
+.su "DEFINING MACROS AND STRINGS" 1
+.pp
+Again, this section is more complicated and
+is aimed toward users with some experience.
+Beginners can skip over this section and refer
+to it again when they have mastered the
+essential commands.
+The average user will not find it
+necessary to create macros or strings
+because they have been predefined 
+by \fBmX\fR.
+However, you will encounter these
+commands and expressions in
+some of the special
+macro files or if you look at
+files written by students who are
+programming enthusiasts,*
+.fn
+*Programming enthusiasts, commonly known as
+``hackers'',
+often have weird looking files because they
+are incapable
+of leaving something alone just because
+it works.
+There is always a possibility it can
+work
+.ul
+better.
+It is best to humor them because sometimes they are right.
+.ef
+and it is helpful to have an idea
+of how these processes work.
+.l1
+.le
+\&\fB.de \fIxx\fR	define a macro \fIxx\fR.
+The input lines following this command are
+part of the macro definition. 
+The end of the definition is signaled
+by
+.le
+\&\fB..	\fRalone on a line.
+.le
+\&\fB.ds \fIxx string\fR	Define a string named \fIxx\fR.
+The string in this context
+is just like
+a macro, except a macro is composed of 
+input
+.ul
+lines,
+while a string is composed of a string
+of
+.ul
+characters.
+A carriage return ends the string definition.
+.e1
+.sp
+.su "OTHER PROGRAMS" 1
+.pp
+After you have completed your input file
+there are other programs available on
+UNIX that can help you improve your work.
+\fBspell\fR checks for misspelled words,
+\fBlook\fR is a form of spell that looks up
+words as you go along
+(just use the ! to temporarily get out
+of the editor, type ``look'' and as much of
+the word as you know; 
+spell will list all the words it recognizes
+that begin with those letters).
+\fBdiction\fR checks your grammar,
+\fBexplain\fR gives tips on improving your usage,
+and
+\fBstyle\fR analyzes your style.
+\fBrefer\fR is a preprocessor that uses a
+bibliographic database system to 
+store, retrieve and format references.
+System documentation is available on these programs
+by typing \fBman \fIname of program \fR.
+Some of these programs also have reference manuals that can
+be purchased
+in the Computer Science Department.
+.sa A "SAMPLE MACROS"
+.sa B "mX MANUAL PAGES"

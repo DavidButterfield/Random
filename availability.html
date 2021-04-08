@@ -1,0 +1,1248 @@
+<HTML>
+<HEAD>
+<TITLE>Introduction to Solaris OS Availability</TITLE>
+<META name=keywords value="availability, reliability, software, Solaris, MTTF, MTBF, MTTR">
+</HEAD>
+
+<BODY>
+
+<CENTER>
+<H1>Introduction to Solaris OS Availability</H1>
+David.Butterfield@Sun.COM
+</CENTER>
+
+<H2>Availability</H2>
+
+<P>
+Availability is a function of both failure rate and speed of repair.
+It is usually expressed as the fraction of time that a system is able
+to provide service during a specified interval, or alternatively, the
+probability that the system is able to provide service at any given
+time within that interval.  This can be expressed as:
+
+<P>
+<PRE>
+                       Time the system is able to provide service
+        Availability = ------------------------------------------
+                                     Total time
+</PRE>
+
+<P>
+The Reliability of a system is its ability to function correctly over a
+specified period of time.  Reliability is often expressed in terms of a
+probability of successful operation over a specified time, or
+alternatively, as the Mean Time To Failure (MTTF).
+
+<P>
+The average time it takes to repair a failed system is referred to as
+Mean Time To Repair (MTTR).  MTTR represents the average time it takes
+from when a failure stops the system from providing service, to the
+time the system is again able to provide service.
+
+<P>
+If, on average, a system alternately provides service for a time
+interval of length MTTF, and then fails to provide service for a time
+interval MTTR, whereupon it returns to providing service, then over
+time, on average we can calculate:
+
+<P>
+<PRE>
+                           MTTF
+        Availability = -----------
+                       MTTF + MTTR
+</PRE>
+
+<P>
+Informally, a degree of availability is sometimes referred to by a
+number of "nines".  The term "four nines" simply means an Availability
+of at least 0.9999, whereas "five nines" would be at least 0.99999, and
+so forth.
+
+<P>
+Many of our High Availability customers have availability requirements
+of "five nines" or better.  This corresponds to an average downtime of
+about 5 minutes per year or less.
+
+<P>
+<DL COMPACT>
+<DT>
+Note:
+<DD>
+	There are various useful mathematical definitions of
+	Availability and Reliability that differ depending on what sort
+	of analysis is being performed.  Here we have used a definition
+	sometimes referred to as "inherent" or "steady-state"
+	Availability, which assumes a long time period and an
+	exponential distribution of failures (constant failure rate)
+	over the service lifetime.
+</DL>
+
+<P>
+<DL COMPACT>
+<DT>
+Note:
+<DD>
+	The term Mean Time Between Failures (MTBF) refers to the sum of
+	MTTF and MTTR.  In this document, we prefer to maintain the
+	separation between MTTF and MTTR.  Also note that some authors
+	have used the term MTBF in discussions and equations where they
+	actually mean MTTF.
+</DL>
+
+<H3>Hardware Availability</H3>
+
+<P>
+Individual hardware components are typically specified to operate
+within specific environmental limits (such as temperature, humidity,
+clock speed, etc) with specified reliability (MTTF), over a specified
+service lifetime.  This service lifetime typically begins after an
+initial "burn-in" period, which is used to detect and weed out
+components with inherent defects, generally having to do with faulty
+manufacturing or assembly.
+
+<P>
+The failure of an individual hardware device need not result in a total
+system failure.  Redundant hardware components, together with software
+designed to support High Availability, can allow a system to continue
+operation even in the face of individual component failure.  In many
+cases such a system can be repaired even while it continues to provide
+service.
+
+<P>
+Extensive mathematical models have been developed to help understand
+and predict overall system availability of a redundant hardware
+system.  Such models can be expressed using, for example,
+Series-Parallel Reliability Block Diagrams, Fault Trees, or Reliability
+Graphs.  More sophisticated analysis techniques include Markov Models
+and Stochastic Petri Net Models.
+
+<P>
+These models can be used to compute overall system availability by
+appropriately combining the availability characteristics, such as
+failure rates and repair times, of the individual system components.
+
+<P>
+It is important to note that individual hardware component failure is
+not necessarily caused by a fundamental flaw:  part of the very
+specification of hardware components is their MTTF, and component
+failures are expected to occur over time with certain probabilities.
+
+<H3>Software Availability</H3>
+
+<P>
+Software availability can be measured at many levels.  Here we
+distinguish between <I>Platform</I> Availability, and
+<I>Service</I> Availability.
+
+<P>
+Platform Availability refers to the Availability of a platform on which
+application services are built.  Platform software includes the
+operating system, and may include clustering software, resource and
+system management software, and/or middleware.
+
+<P>
+From the end user's point of view, the most useful availability metrics
+usually need to take into account other software services such as a
+DBMS, web server, or other application servers and/or clients.
+Ultimately what the end user is interested in is getting his work done,
+not merely whether the OS is "up and running".  This larger picture is
+referred to as Service Availability.
+
+<P>
+Software Availability is somewhat different from Hardware
+Availability.  Unlike the case of hardware failures, when a software
+failure occurs, it is nearly always due to a <I>defect</I> in the
+software.  The software is either (perfectly) correct, or it is
+incorrect (contains defects). Even when an underlying hardware fault
+triggers a software failure, this usually indicates a software defect,
+in that the software did not properly detect and contain the hardware
+fault. (In rare cases where an undetectable hardware fault triggers a
+software failure, the software failure could be considered to have
+occurred in the absence of a software defect.)  The point is that a
+hardware component in its inherent design has an expectation of
+failure, expressed as its MTTF, whereas software modules (other than
+test modules) do not exhibit expected failures as part of their
+design.
+
+<P>
+Models for computing Software Availability are rather weak compared to
+the models for hardware.  The models I have found so far are limited to
+making empirical measurements of MTTF and MTTR of the entire software
+system, and then using those measurements to compute and predict
+Software Availability.
+
+<P>
+<DL COMPACT>
+<DT>
+Note:
+<DD>
+       The terms Mean Time To Software Stop (MTTSS) and Mean Time
+       Between Software Stops (MTBSS) are sometimes respectively used
+       to refer to Software MTTF and MTBF.
+</DL>
+
+<P>
+One step up in sophistication is a proposed model that classifies
+software failures into three categories, with differing failure
+probability model characteristics:
+
+<OL>
+<P>
+<LI>Consistent failures: the software will fail whenever a particular
+    path through the code, with a particular parameter set, is
+    exercised.</LI>
+
+<P>
+<LI>Timing-sensitive failures: the software will fail when some
+    asynchronous coincidence occurs, such as an interrupt occurring
+    during a particular code sequence, or a resource contention between
+    processors at a particular code sequence.</LI>
+
+<P>
+<LI>Aging phenomena: the software will fail after some period of use,
+    for example because of a deterioration in the availability of OS
+    resources.  Software that fails to properly deallocate a resource,
+    such as memory pages, can cause this.  Other potential causes of
+    software aging include resource fragmentation, gradual data
+    corruption, and accumulation of numerical errors.</LI>
+
+</OL>
+
+<P>
+Platform Software Availability is highly application dependent.  The
+paths through platform software, the parameter sets they encounter, the
+potential and likely interactions between multiple threads in the
+system, and the likelihood of encountering any particular resource
+leak, are all dependent on what platform services the particular
+application makes use of, the relative frequency of use of those
+services, and the total load on the system.
+
+<P>
+This makes it particularly difficult to generalize platform Software
+Availability measurements from one application domain to another.  A
+system that is tuned and used for one dedicated application, for
+example a telco control application, or a database server, or a
+web-page server, may exhibit very different availability
+characteristics than a system that is used as a general NFS/IMAP server
+for desktop clients.
+
+<P>
+Mitigating this problem, however, is the fact that systems with
+ultra-high availability requirements tend not to run a wide range of
+applications, but rather tend to run a well understood set of
+applications over and over.  This makes it much more likely that bugs
+can be found during system testing of the application and the platform
+together, and that systems with similar loads will exhibit similar
+reliability while running that application set.
+
+<P>
+Also, not all failures are equally probable, and programs to track down
+and eliminate high-frequency, high-severity problems, whether by fixing
+bugs or by increasing the robustness of the affected software, can
+greatly improve the MTTF of the platform software.  This will, over
+time, reduce, though not eliminate, much of the application and load
+related variability in Platform MTTF.
+
+<H2>General Approaches to Improving Availability</H2>
+
+<P>
+Using the standard measure of Availability:
+
+<P>
+<PRE>
+                           MTTF
+        Availability = -----------
+                       MTTF + MTTR
+</PRE>
+
+<P>
+we can see that there are two general approaches to improving
+availability:  (1) increase the reliability (MTTF); and (2) decrease
+the recovery time (MTTR).
+
+<P>
+To illustrate, let us consider a simple hypothetical example discussing
+Solaris OS kernel Availability on a system with perfect hardware.  In
+this simple example, let us assume that OS software failures result in
+a system panic and reboot, and that after the reboot completes, service
+is fully restored.
+
+<P>
+Suppose that on this hypothetical system, the OS software fails once
+every 70 days; i.e. the MTTF is 70 days.
+
+<P>
+Suppose also that once an OS software failure is detected, this
+hypothetical system requires 10 minutes to panic and reboot; i.e. the
+MTTR is 10 minutes.
+
+<P>
+We compute the Availability thus:
+
+<P>
+<UL>
+        <LI>MTTF = 70 days = 100800 minutes</LI>
+        <LI>MTTR = 10 minutes</LI>
+</UL>
+
+<P>
+<PRE>
+                           MTTF        100800
+        Availability = ----------- = ----------- = 0.99990080
+                       MTTF + MTTR   100800 + 10
+</PRE>
+
+<P>
+So this system would have a "four nine" level of availability.
+
+<P>
+Now suppose there were a requirement to increase the availability
+of this system to the "fine nines" level.
+
+<H3>Increasing Reliability (MTTF)</H3>
+
+<P>
+Using one general approach, changing only MTTF, one could achieve "five
+nines" by increasing the MTTF from 70 days to 700 days:
+
+<P>
+<UL>
+        <LI>MTTF = 700 days = 1008000 minutes</LI>
+        <LI>MTTR = 10 minutes</LI>
+</UL>
+
+<P>
+<PRE>
+                           MTTF        1008000
+        Availability = ----------- = ------------ = 0.99999008
+                       MTTF + MTTR   1008000 + 10
+</PRE>
+
+<H3>Decreasing Recovery Time (MTTR)</H3>
+
+<P>
+Using the other general approach, Changing only MTTR, one could achieve
+"five nines" by decreasing the MTTR from 10 minutes to one minute:
+
+<P>
+<UL>
+        <LI>MTTF = 70 days = 100800 minutes</LI>
+        <LI>MTTR = 1 minute</LI>
+</UL>
+
+<P>
+<PRE>
+                           MTTF        100800
+        Availability = ----------- = ---------- = 0.99999008
+                       MTTF + MTTR   100800 + 1
+</PRE>
+
+<P>
+This example illustrates the extreme importance of minimum possible
+reboot times in achieving better platform availability numbers.  It is
+also apparent that whenever possible, alternative recovery strategies
+should be considered as opposed to a full reboot.
+
+<P>
+The importance of <I>automatic</I> recovery from failures, to avoid
+delays associated with manual intervention, is also apparent.  A delay
+of even a few minutes waiting for an operator to initiate a reboot
+would have a significant impact on total availability.
+
+<P>
+In this simple example, we have equated recovery time with panic and
+reboot time.  More generally, once a failure occurs, recovery time
+depends on many factors, including:
+
+<UL>
+<LI>    the time it takes to discover a fault has occurred;</LI>
+
+<P>
+<LI>    the time it takes to diagnose the problem and determine the
+	recovery procedure;</LI>
+
+<P>
+<LI>    how well the problem diagnosis procedure determines the
+        minimally disruptive necessary recovery procedure;</LI>
+
+<P>
+<LI>    the time it takes to carry out the selected recovery
+        procedure;</LI>
+
+<P>
+<LI>    how effective the selected recovery procedure is at recovering
+	from the problem, and whether the system must subsequently fall
+	back to a more disruptive recovery procedure.</LI>
+
+</UL>
+
+<H3>Combined Approaches</H3>
+
+<P>
+Of course, an overall availability improvement strategy may attack from
+both sides:  increases in MTTF, and decreases in MTTR.  In our
+hypothetical example, if we can drive MTTF up to one software failure
+per year, and reduce recovery time down to five minutes, we can get our
+five nines:
+
+<P>
+<UL>
+        <LI>MTTF = 365 days = 525600 minutes</LI>
+        <LI>MTTR = 5 minutes</LI>
+</UL>
+
+<P>
+<PRE>
+                           MTTF        525600
+        Availability = ----------- = ---------- = 0.99999049
+                       MTTF + MTTR   525600 + 5
+</PRE>
+
+<H2>Specific Approaches to Improving Availability</H2>
+
+<H3>Increasing Component Reliability (MTTF)</H3>
+
+<P>
+Detailed discussion about ensuring and improving hardware and software
+component reliability is beyond the scope of this document.
+Engineering methodologies and processes for the architecture and design
+of hardware and software products are well covered in the literature.
+
+<P>
+Engineering process improvement should strive for fewer initial defects
+and aggressive defect detection and removal.
+
+<P>
+Software subsystems and applications should be designed with maximum
+independence, so that the failure of one component does not
+automatically result in the failure of other services on the same
+machine.
+
+<P>
+One aspect of software reliability testing worth specific mention is
+the importance of ensuring proper software code coverage, particularly
+with regard to error and recovery paths.  These paths are often
+neglected in normal testing, since many error paths, particularly paths
+associated with hardware faults, are rarely taken.  Fault injection
+frameworks and test cases are essential to ensure the adequacy of
+software mechanisms for fault detection and handling.
+
+<H3>Decreasing Recovery Time (MTTR)</H3>
+
+<P>
+Recovery from a fault first requires the detection and proper analysis
+of the fault.  Software can contribute to this by implementing
+appropriate self-checking, and hardware error checking, at various
+points in the software.  The earlier a fault is detected, the less the
+chance that the fault will spread to other parts of the system, and the
+earlier recovery can be initiated.  Accurate fault analysis is also
+important to ensure that correct and adequate recovery steps are
+taken.  Improper fault analysis can delay recovery from the real fault,
+increasing the chances that it will spread further, and increasing the
+recovery time.
+
+<P>
+Software recovery time should be minimized, particularly when an error
+is severe enough to cause a service outage.  In the case of OS failures
+requiring a software restart, the shortest possible recovery path
+should be taken.  For example, it may be possible to reboot the
+operating system without going through an entire lengthy
+power-on-self-test process.  If an uncorrupted copy of the previous
+PROM device tree is available, it may be possible to avoid a lengthy
+reprobe of devices on the system.  Other fast software restart
+possibilities may exist.
+
+<H3>Redundancy and Fault Tolerance</H3>
+
+<P>
+Increased component reliability is an important part of increasing
+system availability, but there are limits to what good engineering can
+provide in this area.  To achieve High Availability requires a system
+to not only reduce the number of failures it encounters, but also to
+tolerate the failures that inevitably do occur.
+
+<P>
+A fault tolerant system is one in which service automatically continues
+to be delivered in the face of one or more failures.
+
+<P>
+Fault tolerance is primarily accomplished by arranging redundant
+components into a system in such a way that if one component fails, a
+redundant component continues to provide service while the failed
+component is repaired and returned to service. In this way, failures
+can be hidden from the user, who thereby sees no interruption of
+service.
+
+<P>
+Fault tolerant systems increase total system availability by increasing
+the MTTF of the system, viewed as a whole.  Since the system continues
+to provide service, even when an individual component of that system
+has failed, from the user's point of view the MTTF of the system is
+higher than the MTTF of its individual components, and so the system's
+Availability is seen to be higher.
+
+<P>
+Note that a redundant system will actually see <I>more</I> component
+failures in a given time period than a non-redundant system containing
+similar components, because the redundant system contains a larger
+number of (redundant) components that can fail, each according to its
+own MTTF.  But again, because of that redundancy, individual component
+failures can be worked around and masked, so that the services that the
+whole system provides exhibit a higher MTTF than the individual
+components.
+
+<P>
+Redundancy can also significantly decrease the MTTR of a system in
+cases where a failure cannot be fully hidden from a client.  For
+example, in the case of a failed server node that was servicing clients
+across a network, in some cases in-progress transactions may be
+interrupted and fail.  But with redundant server nodes available to
+service new transactions, a client can reinitiate the transaction
+immediately without having to wait for the failed server to return to
+service.  So even though the MTTF of the individual server node was
+directly visible to the client in this example, redundancy allowed the
+client-apparent MTTR to be significantly shorter, thus increasing the
+client-visible Service Availability.
+
+<P>
+In the above example, using redundancy to reduce the MTTR of the
+service did increase Service Availability, but the failure was still
+visible to the client.  Using fault tolerance, where the service is not
+interrupted by the failure, has the advantage that clients never become
+aware of the failure.  Visible failures, no matter how short, increase
+the risk of possibly-disruptive consequential failures.  So increasing
+overall system availability by increasing MTTF might be considered
+superior to decreasing MTTR.
+
+<P>
+It is important to minimize the time it takes to failover from a failed
+component to a redundant component.  The failover time represents the
+MTTR component of the Availability calculation, which we have seen
+significantly affects the number of "nines" achieved.
+
+<P>
+For minimum failover time, a fully initialized <I>hot stand-by</I> node
+can track the state of all transactions in an active node, and take
+over service immediately upon a detected failure in the primary.  One
+step down, a so-called "warm" secondary is up and ready to accept work,
+but may need to read checkpointed state to become up-to-date if called
+upon to take over from a primary.
+
+<P>
+It is also critical to include mechanisms to detect "latent" faults in
+redundant components.  These are faults that may not otherwise become
+apparent until the component containing the fault is exercised.  For
+example, if a system is composed of a primary component and a secondary
+component, with all work being done by the primary, a fault in the
+secondary must not lie unnoticed.  If it is, when the primary fails,
+and the secondary tries to take over, it too will fail, resulting in a
+loss of service.  Secondary components must undergo periodic health
+checks to ensure that they are still prepared to take over should the
+primary component fail.  Otherwise the essential element of redundancy
+is lost.
+
+<P>
+During any period of time when a failed component is out of service,
+the system has a reduced level of redundancy, and so the risk of a
+total system outage is higher than when all redundant components are
+fully operational.  To ensure continued High Availability requires the
+prompt repair of the failed component.
+
+<P>
+In some systems, rather than designating redundant components as spares
+or secondaries, it may be the case that all components are used in
+normal operation, but when some component fails, the system continues
+to operate in a degraded mode, possibly with lower performance. 
+
+<H4>Software Support for Hardware Fault Tolerance</H4>
+
+<P>
+Some forms of hardware redundancy, such as memory error correcting
+codes, are handled completely in hardware and require no software
+support.  However, sophisticated redundant hardware systems typically
+require operating system software support for managing the redundant
+hardware.
+
+<P>
+To take advantage of redundant hardware to increase availability, OS
+software must be able to detect faults in the hardware, analyze those
+faults to isolate the failed component, and manage the failover
+transition to a redundant component.
+
+<P>
+Device drivers must be "hardened" so that they are not susceptible to
+software failure in the face of hardware device faults. Drivers must
+assume that the devices they control will fail, in any possible way,
+and must be coded to handle such failures, including corrupted data and
+control information and missing or spurious interrupts.
+
+<P>
+Besides detecting device faults, device drivers must report the faults
+so that higher-level software can initiate proper analysis and
+recovery.  Drivers must be tested using a fault injection framework to
+ensure that they properly detect and report device faults, and that
+higher level software subsequently initiates and completes proper
+recovery.
+
+<P>
+The operating system and drivers must make provision for containing the
+effects of faults that have been detected, so that corrupted data does
+not spread though the system.  Fault containment depends on proper and
+timely error detection and analysis.  Some of the measures necessary to
+prevent the spread of failures include:
+
+<UL>
+<LI>    whenever possible correct the problem within the module that
+	detects it, rather than expecting the requestor to deal with
+	the error;</LI>
+
+<P>
+<LI>    no requestor should ever experience a silent failure (operation
+	not performed or corrupted data) -- informative error codes
+	should always be returned;</LI>
+
+<P>
+<LI>    no request should be blocked indefinitely;</LI>
+
+<P>
+<LI>    no resources should be held indefinitely.</LI>
+
+</UL>
+
+<P>
+The OS must also provide the facility to perform periodic health checks
+on secondary components, so that latent faults can be detected and
+repaired before those secondary components are called upon to become
+primaries.
+
+<P>
+Finally, the OS must support the ability to remove and replace faulty
+hardware components while the system remains up and providing service.
+The ability to dynamically reconfigure a system while it is operational
+is an essential element of providing a High Availability platform.
+
+<H4>Platform Software Fault Tolerance and Recovery</H4>
+
+<P>
+A system may also contain software redundancy.  This occurs when
+separate copies of the software are running on different machines.  The
+machines may be closely associated nodes that are members of a cluster,
+or they may be separate servers in a server farm servicing similar
+types of requests, for example to a shared database.  In either case,
+in this discussion the different machines are running the same software
+and are providing the same services.
+
+<P>
+Recall that above we classified software failures into three categories:
+
+<OL>
+<LI>Consistent failures</LI>
+<LI>Timing-sensitive failures</LI>
+<LI>Aging phenomena</LI>
+</OL>
+
+<P>
+Generally speaking, adding redundancy does not improve availability
+issues related to the first class of problems listed above, because the
+same defects exist in all copies of the software.  This class of
+failures occurs consistently given the same input parameters, so two
+redundant systems encountering the same set of data will fail in the
+same way each time.
+
+<P>
+However, a cluster of nodes providing an application service may
+provide a degree of software redundancy protection against the second
+two types of software failures.  In the case of a timing-sensitive
+failure, any particular instance of the event causing the failure may
+occur on only one node of the cluster, causing that node to fail, while
+other nodes in the cluster continue to provide the application
+service.  In the case of aging phenomena, the problem may cause a
+software failure at different times on different nodes, again allowing
+the remaining nodes to continue to provide application service while
+the first node recovers.
+
+<P>
+This sort of protection, however, is not a characteristic of the sort
+of redundancy found in machines that run the redundant processors in
+lockstep, such as the Netra ft1800.  In such machines, each processor's
+state is exactly synchronized with the others, and each processor
+encounters the same asynchronous events in exactly the same way.
+
+<P>
+It is interesting to observe that redundancy through clustering, which
+is capable of protecting a service against some classes of software
+failure, at the same time provides the redundancy to protect against
+hardware failures; whereas a single machine with redundant hardware
+components protects only against hardware failures, not software
+failures.
+
+<H4>Application Software Fault Tolerance and Recovery</H4>
+
+<P>
+In addition to hosting an application on a High Availability platform,
+protection against faults in the application software itself is also
+necessary to achieve high Service Availability.  Even if the platform
+remains operational, faults in the application can cause service
+outages.
+
+<P>
+The platform can provide certain kinds of services to help handle
+application failures. System software can monitor targeted application
+processes and automatically restart them if they die. More
+sophisticated platform software can monitor the health of a live
+application, observing application "heartbeats", or issuing test
+transactions to the application to ensure that it is still responding.
+
+<P>
+Platform software can also assist in application fault recovery by
+providing checkpoint and failover services that an application can use
+to preserve its state at appropriate points, and recover that state in
+the event of a failure.  The preserved state can be used by the
+restarted application, or by a redundant instance of the application,
+to allow processing to continue from where it left off.
+
+<P>
+There are limits, however, to what can be done from within the platform
+software alone.  For example, the platform can provide checkpoint
+services, but the application must make use of them.  Only the
+application knows the important aspects of its internal state that must
+be preserved in order to facilitate recovery.
+
+<P>
+Even more, the application is in the best position to monitor its own
+internal state, detect faults, and initiate recovery.  The platform
+can detect gross problems, like dead applications, and perhaps some
+application "hang" problems.  But the application can perform much more
+rigorous internal health checks and detect errors that cannot be readily
+discerned from outside the application.  As we have seen, prompt and
+accurate error detection and analysis allows proper recovery to begin
+sooner, reducing the risk of a failure spreading.
+
+<P>
+Platform software should provide services for applications to
+use in support of their own High Availability, and application
+developers must be trained how to use them properly.
+
+<H4>Diversity</H4>
+
+<P>
+Diversity refers to a form of redundancy where the redundant components
+differ in an important availability-relevant way.  Consider, for
+example, a collection of server machines all providing the same
+service, such that any client on the Internet can access the service by
+use of any of the server machines.  If some of the server machines are
+located in one city, while others are located in a different city, the
+machines providing the service have an attribute of geographic
+diversity that they would not have if they were all located in the same
+room.
+
+<P>
+Diversity of this sort can provide protection against certain types of
+failures that simple redundancy cannot: for example the building falls
+down in an earthquake, or the local telephone company switching station
+is destroyed in a fire.
+
+<P>
+Diversity and Redundancy are related concepts, but they are not the
+same.  The essential element that distinguishes Diversity from simple
+Redundancy is that the former requires some availability-relevant
+difference between the redundant components, such as their geographic
+location, or mode of operation, or dependency on the outside
+environment.
+
+<P>
+If a system's main communications link relies on a physical link
+to a local telephone company office, a redundant link that instead
+uses satellite communication would have an element of diversity.
+
+<P>
+Another example of diversity would be a backup mechanism for detecting
+application or platform software failures.  For example, OS software
+may have self-checks coded into a clock routine to detect if the OS has
+hung.  But a hardware watchdog timer may be programmed to detect OS
+hangs as well.  These two mechanisms are doing the same job, detecting
+OS hangs, so they are in some sense redundant, but they do that job in
+very different ways, susceptible to very different types of failures,
+which decreases the probability that an OS hang will go undetected.
+Ideally the software would also periodically interrogate the hardware
+watchdog to ensure that it was still functioning properly, in which
+case the two mechanisms would effectively be watching each other.
+Because these two OS hang detection mechanisms operate in different
+ways and have different failure modes, they have the element of
+diversity.
+
+<H3>Fault Prevention</H3>
+
+<P>
+In some cases it is possible to predict impending hardware failures
+before they happen.  In such cases, repairs can be carried out before a
+failure actually occurs.  Hardware components can be monitored, and by
+using statistical tools and knowing the boundary limits of a component,
+it is possible to predict impending failure when the measured
+characteristics consistently go above a predetermined sigma limit. When
+this happens a replacement can be planned, executed and the system
+brought back into full service without ever experiencing any unplanned
+downtime.
+
+<P>
+This sort of failure prevention has long been done in the maintenance
+of critical mechanical parts, for example the precision measurement of
+engine oil properties in jet engines to determine metal fatigue.
+
+<P>
+The same sort of technique can be used to predict software failures
+related to aging phenomena.  By monitoring various system statistics it
+is possible to notice some kinds of aging effects and predict software
+failures.  While it is more optimal to remove aging-related defects
+from the software, in cases where this has not been accomplished,
+periodically restarting the software at planned and convenient times
+may be a viable approach, particularly in a cluster environment where
+individual nodes can be taken out of service and rejuvenated while the
+remainder of the cluster continues to provide service.
+
+<H3>Minimizing Planned Downtime</H3>
+
+<P>
+Besides downtime due to failures, availability is also impacted by
+<I>planned</I> downtime.  This is time the system is taken out of
+service for upgrades, reconfiguration, maintenance, diagnostics, etc.
+Designing the software so that these operations can be performed while
+the system remains operational contributes to overall system
+availability.
+
+<P>
+In cases where a reboot is required after an upgrade operation, a
+mechanism to perform a very quick software restart, without having to
+go through the entire usual hard boot sequence, can also have a
+significant effect on system availability.  Remember, a "five nines"
+level of availability only allows for about five minutes of total
+downtime per year.
+
+<P>
+In cluster systems, or other types of redundant systems that can
+support multiple domains or virtual machines, upgrades can be done in
+such a way that service is not interrupted at all.  In a "rolling
+upgrade", one or more of the nodes in the system is taken out of
+service and upgraded while the remaining nodes continue to provide
+service.  If interoperability between the old and new services is
+properly designed in, then the upgraded nodes can be returned to
+service and the process repeated with additional nodes until all nodes
+have been upgraded.
+
+<P>
+A rolling upgrade in general requires that the old and the new services
+be able to actively provide services simultaneously.  A special case of
+rolling upgrade that avoids this requirement is "split mode" upgrade.
+In this case, the cluster or machine is split into two partitions, one
+of which continues to provide service, while the other undergoes the
+upgrade operation.  After the upgrade is complete, service is "switched
+over" to the upgraded partition, after which the remaining partition
+also undergoes upgrade and the two partitions are rejoined.
+
+<P>
+Assuming even only one upgrade per year, if an upgrade requires more
+than five minutes, a split or rolling upgrade is the only way to
+achieve five nines or higher.  Fortunately, once a clustered system has
+the ability to recover from failure of individual nodes in the cluster,
+much of the work to support rolling upgrades has already been
+completed.
+
+<H3>Reducing Operational Errors</H3>
+
+<P>
+As hardware and software have become more reliable, operational errors
+have come to account for an increasingly large proportion of service
+outages.
+
+<P>
+Proper system configuration and administration is critical to achieving
+High Availability.  System components must be configured in such a way
+as to provide true redundancy, and not introduce potential single
+points of failure.  Examples of system administration errors include:
+
+<UL>
+<LI>    A system has multiple disks on multiple controllers, but the
+        System Administrator configures mirroring between disks on the
+        same controller, thus introducing a single point of failure.</LI>
+
+<P>
+<LI>    A service technician attempting to replace a faulty module
+        pulls out the wrong (i.e. working) module, thus bringing the
+        system down.</LI>
+
+</UL>
+
+<P>
+For customers where High Availability is a critical requirement, it is
+extremely important to educate customers and service personnel
+regarding the importance of maintaining on-site spares, and of carrying
+out the timely replacement of failed redundant components.  Once the
+system detects and isolates a failed component, the length of time that
+failed component remains in the system has a direct impact on the
+probability of total system failure, and consequent loss of service.
+
+<P>
+Well written documentation, and adequate training, are essential to
+achieving High Availability in the field.
+
+<P>
+It is also important to examine and address the underlying causes of
+operational error.  The problem cannot be simply attributed to
+inadequate training.  Modern computer systems, especially redundant
+systems designed for High Availability, are complex, and the tools
+available to administrate them have not kept up with the complexity.
+There are far too many opportunities for human error to enter into
+system configuration and administration processes.
+
+<P>
+Some things that can be done to reduce operational errors include:
+
+<UL>
+<LI>    Simplification of procedures: presenting better information and
+        simpler options, reducing the likelihood of confusion;</LI>
+
+<P>
+<LI>    Greater automation of procedures: eliminating human decision
+        making and manual configuration steps wherever possible;</LI>
+
+<P>
+<LI>    Sanity checking: recognizing unlikely, non-optimal, or
+        potentially dangerous selections or operations and requiring
+        confirmation.</LI>
+</UL>
+
+<H2>Availability Measurement</H2>
+
+<P>
+The state of the art in software availability modelling is rather
+primitive.  The only real approach to understanding the availability
+characteristics of our software is to measure it.  Until we do that
+it will be very difficult to justify any particular claim as to the
+availability of our systems.
+
+<P>
+Some limited measurements have been made on Solaris systems; these
+are noted in the References at the end of this paper.
+
+<P>
+However, what is needed is a very aggressive instrumentation and data
+collection program, so that we can obtain a large amount of real data
+from the field.  Instrumentation that has been suggested includes:
+
+<UL>
+<LI>    Every time anybody shuts down a system, we ask them why,
+        record the information, and forward it to Sun.</LI>
+
+<P>
+<LI>    Every time a system reboots without having a shutdown
+        reason given, we ask the owner what happened, record the
+        information and forward it to Sun.</LI>
+
+<P>
+<LI>    We use system-up and shut-down (or last sync times) to compute
+        up times and (by inference) down times, record and forward it
+        to Sun.</LI>
+
+<P>
+<LI>    Every time a panic happens, capture a brief signature and
+        forward it to Sun.</LI>
+</UL>
+
+<P>
+We should start storing and processing this data to find out how long
+our systems stay up, why they go down, and what panics happen how
+often.  We can then use this information to prioritize availability
+enhancement projects and propose better instrumentation.
+
+<P>
+It should be emphasized that it is more important to get started soon,
+than it is to get the instrumentation parameters perfect the first
+time.  We <I>will</I> have to change the instrumentation as we gather
+data and learn more, and the earlier we start collecting data, the
+earlier we can start to make availability claims with any confidence.
+
+<H2>Customer Satisfaction</H2>
+
+<H3>Perception</H3>
+
+<P>
+A customer's perception and trust of a system depends on more than just
+how often it crashes and how much downtime it experiences.  Of course,
+these are primary factors -- when a service failure occurs, customer
+confidence in the system is likely to be diminished to one degree or
+another.  What can we do to minimize that diminishment?
+
+<P>
+Customers dislike system crashes.  They dislike <I>unexplained</I>
+crashes even more.  It is therefore important to implement strategies
+for diagnosing faults on their <I>first</I> occurrence.  Customers are
+much more reassured when we can tell them that we understand why their
+system failed, and that we have implemented a change that resolves the
+underlying cause.  This applies to both hardware and software
+problems.  Good diagnostics to facilitate quick and accurate diagnosis
+are important to customer satisfaction.
+
+<P>
+But there may be a tradeoff between speed of recovery and better fault
+diagnosis.  Consider the case of a kernel panic: effective fault
+diagnosis requires system information to be preserved (e.g.  a "core
+dump"), but preserving that information requires some amount of time,
+which can delay restoration of service.  The requirements of a
+particular installation may determine how the tradeoff is resolved.
+For failures that occur infrequently, some installations may value the
+short-term benefit of quicker recovery time higher than the longer-term
+diagnosis benefit associated with a delayed recovery.  Others may be
+more tolerant of a recovery delay in favor of the benefit of increased
+future reliability.  The system should provide mechanisms for an
+installation to make such tradeoffs.
+
+<P>
+Life-support systems, for example, must recover with all possible
+speed, and diagnosis of a problem will take a lower priority.
+
+<P>
+However, most installations are likely to resolve this tradeoff in
+favor of longer-term reliability.  In many instances, once a failure
+occurs, no matter how short, it has caused considerable inconvenience.
+Lengthing recovery by a modest time to facilitate diagnosing the
+problem and making sure it never happens again will often be the chosen
+policy.  Notice that in the short term, this reduces Availability
+because of the longer recovery time, but in the long term, Availability
+is increased due to the fewer failures achieved by quick and accurate
+diagnosis.
+
+<P>
+Pure Availability is not the only determiner of customer satisfaction.
+An increase in Reliability (MTTF) is always likely to be more popular
+with customers than a decrease in recovery time (MTTR) for the same
+improvement in Availability.  After an unexplained crash, or worse,
+series of crashes, a customer may no longer trust the system, and may
+keep it out of service, even though it seems to be OK at the moment,
+until a human has performed an extensive root cause analysis.  This
+can create an extended period of effective unavailability.
+
+<H3>Communication</H3>
+
+<P>
+Careful and accurate communication is important to ensure customer
+satisfaction.  Because the actual availability experienced at a
+customer installation is highly dependent on their application and
+configuration, customer expectations must be set carefully.
+
+<P>
+Availability models and measurements must be presented in the proper
+context, so that customers understand how they may or may not apply to
+their own situation.
+
+<P>
+Customers with High Availability requirements must be educated about
+the requirements for proper configuration and maintenance, the need for
+on-site replacements for critical parts, and the effect that neglecting
+these requirements will have on expected availability.  Customers need
+to understand the tradeoffs they can make between cost and availability
+in these areas.
+
+<P>
+Proper and consistent use of availability terminology can help in
+customer understanding of availability issues.
+
+<HR>
+
+<H2>References: Availability Studies, Projects, and Papers</H2>
+
+<UL>
+
+<P>
+<LI><CITE><A HREF="http://suntraq.central/suntraq_docs/Glossary_Of_Terms_v2.0.pdf">
+Glossary of Availability Terminology</A></CITE>
+(pdf)
+Internal document defining availability-related terms as they
+are used by Sun Microsystems
+(TAC HA Working Group, Paul Strong, v2.0 January 30, 2001).</LI>
+
+<P>
+<LI><CITE><A HREF="http://ssla.west/~markk/ha-apps.pdf">
+Highly Available Applications and Services</A></CITE>
+(pdf)
+written for application designers and developers, this document
+discusses highly available software services, and the factors that must
+be considered in the design of applications to provide such services;
+it discusses characterization of failures and their handling, what
+services a platform can provide to assist in application availability,
+and what applications must do themselves
+(Mark Kampe, DRAFT 8/7/00).</LI>
+
+<P>
+<LI><CITE><A HREF="http://sunup.eng/white_papers/AppAvailMeas_Empirical_WP.PDF">
+Application Availability: An Approach to Measurement</A></CITE>
+(pdf)
+a detailed discussion of application Service Availability
+characterization and measurement
+(David M. Fishman, &#169; 2000).</LI>
+
+<P>
+<LI><CITE><A HREF="http://suncluster.eng/technical-info/cluster-calc.html">
+Cluster Availability Calculation: On the Complexity of Meaningful
+Availability Metrics</A></CITE>
+(html)
+stresses the distinction between server Platform Availability and
+application Service Availability in a clustered environment
+(Ravi Chhabria).</LI>
+
+<P>
+<LI><CITE><A HREF="http://cto.eng/rascal">
+RAS Computer Analysis Laboratory (RASCAL)</A></CITE>
+(website) a group whose mission is to acquire and disseminate
+quantitative computer systems RAS knowledge through experimental and
+analytical physical science and engineering methods
+(CTO office).</LI>
+
+<P>
+<LI><CITE>
+Performance and Reliability Analysis of Computer Systems: An
+Example-Based Approach Using the SHARPE Software Package</CITE>
+(textbook)
+covers modelling theory and modelling examples using SHARPE; this book
+is not for the fainthearted and requires familiarity and comfort with
+calculus
+(Robin A. Sahner, Kishor S. Trivedi, Antonio Puliafito, &#169; 1996
+Kluwer Academic Publishers, ISBN 0-7923-9650-2).</LI>
+
+</UL>
+
+<H3>Solaris Software Availability Measurements</H3>
+
+<UL>
+
+<P>
+<LI><CITE><A HREF="MTTPanic_byOS.ps">
+Estimated MTTPanic Using Unplanned Panics from CST-AMS Db for Solaris
+Versions 2.5.1 and 2.6 with Comparison Test of Starfire (E10K) Hardware
+Platform</A></CITE>
+(postscript)
+Solaris OS Software MTTF measured at over 12,000 hours
+(Kris Brekke, April 2000).</LI>
+
+<P>
+<LI><CITE><A HREF="netra_avail.ps">
+Availability Assessment for the Netra ft1800 Platform</A></CITE>
+(postscript)
+Netra ft1800 platform Availability is evaluated to be above 0.99999
+(Hossein Moiin, February 2000).</LI>
+
+<P>
+<LI><CITE><A HREF="ENS_avail.pdf">
+Sun's ENS Data Center Scores High on Availability...</A></CITE>
+(pdf)
+an analysis of 46 Servers running Solaris 2.5.1 in the Milpitas
+Production Service Center yields 0.99983
+(Greg Swartz, June 1998).</LI>
+
+<P>
+<LI><CITE><A HREF="http://pae.eng/external/availabilitylab/capture/index.html">
+CAPTURE: Configuration Availability Problem Tracking for User
+Reliability Enhancement</A></CITE>
+(website)
+automatic error reporting project
+<A HREF="http://pae.eng/external/paeorg/gonzo1.html">
+(Wayne Bowers)</A>.</LI>
+
+<P>
+<LI><CITE><A HREF="http://pae.eng/external/availabilitylab/RRBM/index.html">
+Recovery and Resiliency benchmark</A></CITE>
+(website)
+an automated/interactive synchronized fault injection testing
+mechanism, generating recoverability data
+<A HREF="http://pae.eng/external/paeorg/gonzo1.html">
+(Wayne Bowers)</A>.</LI>
+
+</UL>
+
+<H3>Solaris Software Availability Improvements</H3>
+
+<UL>
+
+<P>
+<LI><CITE><A HREF="shiraz-overview.ps">
+An Architectural Overview of Shiraz Software</A></CITE>
+(postscript)
+describes the effort to migrate the software from the Sheffield
+fault-tolerant Netra ft1800 specific system into mainstream Solaris
+(Hossein Moiin, April 3, 2000).</LI>
+
+<P>
+<LI><CITE><A HREF="http://jurassic.eng/~dan/whitesmoke.html">
+Detailed Saratoga SOE Status</A></CITE>
+(website)
+contains status of and links to various Solaris-specific subparts of the
+<A HREF="http://saratoga.france">Saratoga</A>
+(n&#233;e Whitesmoke) project, a clustered software execution
+environment providing carrier grade high availability on Solaris and
+ChorusOS
+(Dan Walsh, Joe Kowalski).</LI>
+
+<P>
+<LI><CITE><A HREF="s8swd_supp_HA.ps">
+High Availability Drivers</A></CITE>
+(postscript)
+an update to the "Hardened Drivers" chapter from the
+<CITE><A HREF="http://docs.sun.com:80/ab2/coll.45.13/DRIVER/@Ab2TocView?Ab2Lang=C&Ab2Enc=iso-8859-1">
+Writing Device Drivers</A></CITE>
+manual, this paper describes what must be done to harden a Solaris
+driver against device faults
+(Solaris 8 Update 2, October 2000).
+</LI>
+
+<P>
+<LI><CITE><A HREF="http://devi.eng/Solaris_IO/devfs.html">
+Filesystem Driven Device Configuration</A></CITE>
+(website)
+The devfs project will reduce boot time by constraining boot-time
+attachment of devices to only those needed to boot the system, and will
+reduce the need to reboot the system to update I/O configuration
+(John Danielson, Shudong Zhou).</LI>
+
+<P>
+<LI><CITE><A HREF="http://ssinfo.eng/ssqual/srsg.html">
+SMI Software Reliability & Serviceability Guidelines</A></CITE>
+(website)
+SunTeam homepage
+(Kris Brekke).</LI>
+
+<P>
+<LI><CITE><A HREF="http://friday.central/ams/index.html">
+Sunup initiative</A></CITE>
+(website)
+homepage.
+</LI>
+
+</UL>
+
+<H3>Hardware Oriented</H3>
+
+<UL>
+
+<P>
+<LI><CITE><A HREF="http://ram-server.eng">
+RAM (Reliability, Availability and Maintainability) Engineering</A></CITE>
+(website)
+includes documents, tools, and field information; includes Hardware
+Availability analysis of various Sun systems
+(J. Roy Andrada, Ji Zhu).</LI>
+
+</UL>
+
+<HR>
+<P>
+<SMALL>
+Many thanks to the people who reviewed drafts of this document and
+provided important ideas and valuable feedback.
+<BR>
+Last Link Update February 5, 2001
+<BR>
+Last Text Update September 8, 2000
+<BR>
+http://devi.eng/~dab/avail.html
+</SMALL>
+
+</BODY></HTML>

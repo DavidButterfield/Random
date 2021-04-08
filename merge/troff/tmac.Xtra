@@ -1,0 +1,466 @@
+.\" sn is used to get a two part title for a subsection in tbl of contents
+.de sn
+.br
+.sp \\n(sau
+.ne \\n(smu
+.da TP
+.ev 2
+.br
+\\$1
+.ta \\n(.lu-3m,(\\n(.lu)R
+\\$2    \\n%
+.br
+.RT
+.ev
+.da
+..
+.\" This next stuff is for auto numbering of chapters (.sc),
+.\" subsections (.su), and sections (.se) which are not part of chapters 
+.\" (for papers etc.)
+.\" you call .sc with [chapter #] "title" 
+.\" you call .su with [num] "title" where num is one of -3,-2,-1,+1,1,2,3,4.
+.\" you call .se with [num] "title" where num is one of -3,-2,-1,+1,1,2,3,4.
+.\" Not entering a "number" gives the next subsection at the current level,
+.\" -1 goes back a level, +1 goes up a level, -2 goes back two levels,
+.\" and 1,2 and 3 are absolute level numbers (1 is the lowest level).
+.\" This stuff must be run through nroffx after tmac.X.
+.\" 
+.\" 
+.\" s9 is the chapter counter
+.\" s1 is the first level subsection counter
+.\" s2 is the second level subsection counter
+.\" s3 is the third level subsection counter
+.\" s4 is the fourth level subsection counter
+.\"
+.\"
+.rn sc cr
+.rn su us
+.nr s0 1 1
+.nr s1 0 1
+.nr s2 0 1
+.nr s3 0 1
+.nr s4 0 1
+.nr s9 0 1
+.de sc
+.ie \\n(s0=3 \{\
+.   rn su s3
+.   rn s1 su\}
+.el \{\
+.   if \\n(s0=2 \{\
+.   rn su s2
+.   rn s1 su\}
+.   el \{\
+.	if \\n(s0=4 \{\
+.	rn su s4
+.	rn s1 su\}\}\}
+.nr s0 1 1
+.nr s1 0 1
+.nr s2 0 1
+.nr s3 0 1
+.nr s4 0 1
+.ie \\n(.$=1 \{\
+.   cr \\n+(s9 "\\$1"\}
+.el \{\
+.   nr s9 \\$1 1
+.   cr \\n(s9 "\\$2"\}
+..
+.de s1
+.ie \\n(.$=1 \{\
+.   nr s1 +1
+.   us "\\n(s9.\\n(s1\\0\\0\\$1" "1"\}
+.el \{\
+.   ie '\\$1'1' \{\
+.      nr s1 +1
+.      us "\\n(s9.\\n(s1\\0\\0\\$2" "1"\}
+.   el \{\
+.      ie '\\$1'2' \{\
+.         nr s2 1 1
+.         nr s0 2
+.         us "\\n(s9.\\n(s1.1\\0\\0\\$2" "2"
+.         rn su s1
+.         rn s2 su\}
+.      el \{\
+.          ie '\\$1'+1' \{\
+.             nr s2 1 1
+.             nr s0 2
+.             us "\\n(s9.\\n(s1.1\\0\\0\\$2" "2"
+.             rn su s1
+.             rn s2 su\}
+.          el \{\
+.tm Error in section number at level 1
+.fl
+.ex\}\}\}\}
+.. 
+.de s2
+.ie \\n(.$=1 \{\
+.   nr s2 +1
+.   us "\\n(s9.\\n(s1.\\n(s2\\0\\0\\$1" "2"\}
+.el \{\
+.   ie '\\$1'-1' \{\
+.      nr s2 0 1
+.      nr s1 +1
+.      nr s0 1 1
+.      us "\\n(s9.\\n(s1\\0\\0\\$2" "1"
+.      rn su s2
+.      rn s1 su\}
+.   el \{\
+.      ie '\\$1'3' \{\
+.         nr s3 1 1
+.         nr s0 3
+.         us "\\n(s9.\\n(s1.\\n(s2.1\\0\\0\\$2" "3"
+.         rn su s2
+.         rn s3 su\}
+.      el \{\
+.         ie '\\$1'+1' \{\
+.            nr s3 1 1
+.            nr s0 3
+.            us "\\n(s9.\\n(s1.\\n(s2.1\\0\\0\\$2" "3"
+.            rn su s2
+.            rn s3 su\}
+.         el \{\
+.            ie '\\$1'1' \{\
+.               nr s2 0 1
+.               nr s1 +1
+.               nr s0 1 1
+.               us "\\n(s9.\\n(s1\\0\\0\\$2" "1"
+.               rn su s2
+.               rn s1 su\}
+.            el \{\
+.		ie '\\$1'2' \{\
+.               nr s2 +1
+.               us "\\n(s9.\\n(s1.\\n(s2\\0\\0\\$2" "2"\}
+.		el \{\
+.			tm Error in subection number at level 2
+.fl
+.ex\}\}\}\}\}\}
+..
+.de s3
+.ie \\n(.$=1 \{\
+.   nr s3 +1
+.   us "\\n(s9.\\n(s1.\\n(s2.\\n(s3\\0\\0\\$1" "3"\}
+.el \{\
+.   ie '\\$1'-2' \{\
+.      nr s3 0 1
+.      nr s2 0 1
+.      nr s1 +1
+.      nr s0 1 1
+.      us "\\n(s9.\\n(s1\\0\\0\\$2" "1"
+.      rn su s3
+.      rn s1 su\}
+.   el \{\
+.      ie '\\$1'2' \{\
+.         nr s3 0 1
+.         nr s0 2
+.         nr s2 +1
+.         us "\\n(s9.\\n(s1.\\n(s2\\0\\0\\$2" "2"
+.         rn su s3
+.         rn s2 su\}
+.      el \{\
+.         ie '\\$1'-1' \{\
+.            nr s3 0 1
+.            nr s0 2
+.            nr s2 +1
+.            us "\\n(s9.\\n(s1.\\n(s2\\0\\0\\$2" "2"
+.            rn su s3
+.            rn s2 su\}
+.         el \{\
+.            ie '\\$1'1' \{\
+.               nr s3 0 1
+.               nr s2 0 1
+.               nr s1 +1
+.               nr s0 1 1
+.               us "\\n(s9.\\n(s1\\0\\0\\$2" "1"
+.               rn su s3
+.               rn s1 su\}
+.            el \{\
+.	         ie '\\$1'+1' \{\
+.	            nr s4 1 1
+.	            nr s0 4
+.	            us "\\n(s9.\\n(s1.\\n(s2.\\n(s3.1\\0\\0\\$2" "4"
+.	            rn su s3
+.	            rn s4 su\}
+.	         el \{\
+.			ie '\\$1'4' \{\
+.		            nr s4 1 1
+.		            nr s0 4
+.		            us "\\n(s9.\\n(s1.\\n(s2.\\n(s3.1\\0\\0\\$2" "4"
+.		            rn su s3
+.		            rn s4 su\}
+.		         el \{\
+.				ie '\\$1'3' \{\
+. 			              nr s3 +1
+.   			            us "\\n(s9.\\n(s1.\\n(s2.\\n(s3\\0\\0\\$2" "3"\}
+.				el \{\
+.					tm Error in subsection numbering level 3
+.					fl
+.					ex\}\}\}\}\}\}\}\}
+..
+.de s4
+.ie \\n(.$=1 \{\
+.   nr s4 +1
+.   us "\\n(s9.\\n(s1.\\n(s2.\\n(s3.\\n(s4\\0\\0\\$1" "4"\}
+.el \{\
+.   ie '\\$1'-3' \{\
+.      nr s4 0 1
+.      nr s3 0 1
+.      nr s2 0 1
+.      nr s1 +1
+.      nr s0 1 1
+.      us "\\n(s9.\\n(s1\\0\\0\\$2" "1"
+.      rn su s4
+.      rn s1 su\}
+.   el \{\
+.      ie '\\$1'-2' \{\
+.         nr s4 0 1
+.         nr s3 0 1
+.         nr s2 +1
+.         nr s0 2 1
+.         us "\\n(s9.\\n(s1.\\n(s2\\0\\0\\$2" "2"
+.         rn su s4
+.         rn s2 su\}
+.      el \{\
+.      ie '\\$1'2' \{\
+.	  nr s4 0 1
+.         nr s3 0 1
+.         nr s0 2
+.         nr s2 +1
+.         us "\\n(s9.\\n(s1.\\n(s2\\0\\0\\$2" "2"
+.         rn su s4
+.         rn s2 su\}
+.      el \{\
+.         ie '\\$1'-1' \{\
+.            nr s4 0 1
+.	     nr s3 0 1
+.            nr s0 3
+.            nr s3 +1
+.            us "\\n(s9.\\n(s1.\\n(s2.\\n(s3\\0\\0\\$2" "3"
+.            rn su s4
+.            rn s3 su\}
+.         el \{\
+.            ie '\\$1'1' \{\
+.		nr s4 0 1
+.               nr s3 0 1
+.               nr s2 0 1
+.               nr s1 +1
+.               nr s0 1 1
+.               us "\\n(s9.\\n(s1\\0\\0\\$2" "1"
+.               rn su s4
+.               rn s1 su\}
+.            el \{\
+.               ie '\\$1'3' \{\
+.      		   nr s4 0 1
+.                  nr s3 +1
+.                  nr s0 3 1
+.                  us "\\n(s9.\\n(s1.\\n(s2.\\n(s3\\0\\0\\$2" "3"
+.                  rn su s4
+.                  rn s3 su\}
+.               el \{\
+.			ie '\\$1'4' \{\
+.		              nr s4 +1
+.		              us "\\n(s9.\\n(s1.\\n(s2.\\n(s3\\n(s4\\0\\0\\$2" "4"\}
+.			el \{\
+.				tm Error in subsection numbering level 3
+.				fl
+.				ex\}\}\}\}\}\}\}\}
+..
+.rn s1 su
+.de x1
+.ie \\n(.$=1 \{\
+.   nr s1 +1
+.   us "\\n(s1\\0\\0\\$1" "1"\}
+.el \{\
+.   ie '\\$1'1' \{\
+.      nr s1 +1
+.      us "\\n(s1\\0\\0\\$2" "1"\}
+.   el \{\
+.      ie '\\$1'2' \{\
+.         nr s2 1 1
+.         nr s0 2
+.         us "\\n(s1.1\\0\\0\\$2" "2"
+.         rn se x1
+.         rn x2 se\}
+.      el \{\
+.          ie '\\$1'+1' \{\
+.             nr s2 1 1
+.             nr s0 2
+.             us "\\n(s1.1\\0\\0\\$2" "2"
+.             rn se x1
+.             rn x2 se\}
+.          el \{\
+.tm Error in section number at level 1
+.fl
+.ex\}\}\}\}
+.. 
+.de x2
+.ie \\n(.$=1 \{\
+.   nr s2 +1
+.   us "\\n(s1.\\n(s2\\0\\0\\$1" "2"\}
+.el \{\
+.   ie '\\$1'-1' \{\
+.      nr s2 0 1
+.      nr s1 +1
+.      nr s0 1 1
+.      us "\\n(s1\\0\\0\\$2" "1"
+.      rn se x2
+.      rn x1 se\}
+.   el \{\
+.      ie '\\$1'3' \{\
+.         nr s3 1 1
+.         nr s0 3
+.         us "\\n(s1.\\n(s2.1\\0\\0\\$2" "3"
+.         rn se x2
+.         rn x3 se\}
+.      el \{\
+.         ie '\\$1'+1' \{\
+.            nr s3 1 1
+.            nr s0 3
+.            us "\\n(s1.\\n(s2.1\\0\\0\\$2" "3"
+.            rn se x2
+.            rn x3 se\}
+.         el \{\
+.            ie '\\$1'1' \{\
+.               nr s2 0 1
+.               nr s1 +1
+.               nr s0 1 1
+.               us "\\n(s1\\0\\0\\$2" "1"
+.               rn se x2
+.               rn x1 se\}
+.            el \{\
+.		ie '\\$1'2' \{\
+.               nr s2 +1
+.               us "\\n(s1.\\n(s2\\0\\0\\$2" "2"\}
+.		el \{\
+.			tm Error in subsection number at level 2
+.fl
+.ex\}\}\}\}\}\}
+..
+.de x3
+.ie \\n(.$=1 \{\
+.   nr s3 +1
+.   us "\\n(s1.\\n(s2.\\n(s3\\0\\0\\$1" "3"\}
+.el \{\
+.   ie '\\$1'-2' \{\
+.      nr s3 0 1
+.      nr s2 0 1
+.      nr s1 +1
+.      nr s0 1 1
+.      us "\\n(s1\\0\\0\\$2" "1"
+.      rn se x3
+.      rn x1 se\}
+.   el \{\
+.      ie '\\$1'2' \{\
+.         nr s3 0 1
+.         nr s0 2
+.         nr s2 +1
+.         us "\\n(s1.\\n(s2\\0\\0\\$2" "2"
+.         rn se x3
+.         rn x2 se\}
+.      el \{\
+.         ie '\\$1'-1' \{\
+.            nr s3 0 1
+.            nr s0 2
+.            nr s2 +1
+.            us "\\n(s1.\\n(s2\\0\\0\\$2" "2"
+.            rn se x3
+.            rn x2 se\}
+.         el \{\
+.            ie '\\$1'1' \{\
+.               nr s3 0 1
+.               nr s2 0 1
+.               nr s1 +1
+.               nr s0 1 1
+.               us "\\n(s1\\0\\0\\$2" "1"
+.               rn se x3
+.               rn x1 se\}
+.            el \{\
+.	         ie '\\$1'+1' \{\
+.	            nr s4 1 1
+.	            nr s0 4
+.	            us "\\n(s1.\\n(s2.\\n(s3.1\\0\\0\\$2" "4"
+.	            rn se x3
+.	            rn x4 se\}
+.	         el \{\
+.			ie '\\$1'4' \{\
+.		            nr s4 1 1
+.		            nr s0 4
+.		            us "\\n(s1.\\n(s2.\\n(s3.1\\0\\0\\$2" "4"
+.		            rn se x3
+.		            rn x4 se\}
+.		         el \{\
+.				ie '\\$1'3' \{\
+. 			              nr s3 +1
+.   			            us "\\n(s1.\\n(s2.\\n(s3\\0\\0\\$2" "3"\}
+.				el \{\
+.					tm Error in subsection numbering level 3
+.					fl
+.					ex\}\}\}\}\}\}\}\}
+..
+.de x4
+.ie \\n(.$=1 \{\
+.   nr s4 +1
+.   us "\\n(s1.\\n(s2.\\n(s3.\\n(s4\\0\\0\\$1" "4"\}
+.el \{\
+.   ie '\\$1'-3' \{\
+.      nr s4 0 1
+.      nr s3 0 1
+.      nr s2 0 1
+.      nr s1 +1
+.      nr s0 1 1
+.      us "\\n(s1\\0\\0\\$2" "1"
+.      rn se x4
+.      rn x1 se\}
+.   el \{\
+.      ie '\\$1'-2' \{\
+.         nr s4 0 1
+.         nr s3 0 1
+.         nr s2 +1
+.         nr s0 2 1
+.         us "\\n(s1.\\n(s2\\0\\0\\$2" "2"
+.         rn se x4
+.         rn x2 se\}
+.      el \{\
+.      ie '\\$1'2' \{\
+.	  nr s4 0 1
+.         nr s3 0 1
+.         nr s0 2
+.         nr s2 +1
+.         us "\\n(s1.\\n(s2\\0\\0\\$2" "2"
+.         rn se x4
+.         rn x2 se\}
+.      el \{\
+.         ie '\\$1'-1' \{\
+.            nr s4 0 1
+.	     nr s3 0 1
+.            nr s0 3
+.            nr s3 +1
+.            us "\\n(s1.\\n(s2.\\n(s3\\0\\0\\$2" "3"
+.            rn se x4
+.            rn x3 se\}
+.         el \{\
+.            ie '\\$1'1' \{\
+.		nr s4 0 1
+.               nr s3 0 1
+.               nr s2 0 1
+.               nr s1 +1
+.               nr s0 1 1
+.               us "\\n(s1\\0\\0\\$2" "1"
+.               rn se x4
+.               rn x1 se\}
+.            el \{\
+.               ie '\\$1'3' \{\
+.      		   nr s4 0 1
+.                  nr s3 +1
+.                  nr s0 3 1
+.                  us "\\n(s1.\\n(s2.\\n(s3\\0\\0\\$2" "3"
+.                  rn se x4
+.                  rn x3 se\}
+.               el \{\
+.			ie '\\$1'4' \{\
+.		              nr s4 +1
+.		              us "\\n(s1.\\n(s2.\\n(s3\\n(s4\\0\\0\\$2" "4"\}
+.			el \{\
+.				tm Error in subsection numbering level 3
+.				fl
+.				ex\}\}\}\}\}\}\}\}
+..
+.rn x1 se

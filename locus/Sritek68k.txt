@@ -1,0 +1,109 @@
+
+Here are some comments on the SRITEK 68000 card.
+
+We have had the card for about two months, and use it heavily, about 16
+hours every day.  It is running XENIX.  We are using the system single
+user for program development.  It is plugged into an IBM XT with two XT
+disks (10MB each), a floppy disk, a COM1 card, and the card with the
+video/printer interface.
+
+The board is actually two boards screwed together, which take 1.5 slots
+worth of space.  We put it into slot 6, so that it "wastes" slot 7,
+which is unusably short anyway.  (Actually, it is possible to use the
+slot next to the card, if you like to put cardboard between your
+boards.)
+
+Xenix runs on the 68000, and DOS on the PC.  Since the only peripheral
+on the 68000 is the PC, all I/O goes through it, and it is called the
+I/O processor (IOP).  The IOP runs a SRITEK supplied program to
+implement the I/O functions which runs under DOS and uses its device
+drivers.
+
+It also has an interrupt driven driver of its own for the first XT hard
+disk on the system, upon which you create a non-DOS partition for it to
+use.  For disk devices other than the first XT drive (if you have one)
+it implements the XENIX devices inside DOS files.  Accesses using these
+DOS files seem to be about 1.5 times slower than accesses using the
+interrupt driven "devices" in the XENIX partition.
+
+There is one disadvantage to using the XENIX partition, however.
+Neither XENIX nor the IOP software handle bad blocks, whereas DOS does.
+So if you have a drive with bad spots in the place where the XENIX
+partition goes, you're out of luck.  (We have 5 XT's:  2 with zero bad
+cylinders, 2 with 1 bad cylinder each, and 1 with 3 bad cylinders; the
+numbers are on a label atop the drives.)
+
+I partitioned my first XT drive into an 8MB XENIX partition and a 2MB
+DOS partition.  The minimum XENIX partition size recommended is 7MB.
+When the system was first brought up, there were 3715 free blocks.  (I
+guess a 7MB partition would leave you 1667, a 9MB partition would leave
+you 5763, and a 10MB (you boot off floppies) 7811.)  Of course you can
+get yourself more free space if you don't use learn (1224 blocks) or
+spell (700 blocks) or games (450 blocks).  There are no online manuals
+or sources (sigh).
+
+Basically, the system runs, and is fairly usable, for a single user.
+Its major failing is that with regard to disk I/O it is slow.  I am not
+sure if this is inherent in the drives, or the IOP software, but I
+suspect the former.  The IOP takes advantage of whatever PC memory you
+have to implement a write through cache of disk pages.  For instance, if
+you type "ls -ls" twice in a row, there is no disk activity the second
+time.  (This probably means that one should structure makefiles to do
+similar things all in a row on this machine.)
+
+The system is your basic V7 Unix, with such goodies as more, fsck, csh,
+and (yes) vi.  The console emulates three tvi925 terminals.  You type a
+special character and the IOP switches you among three screens -- they
+look like three terminals to XENIX.  If you have something going on the
+first screen that you forgot to run in the background (because you are
+used to typing ^Z to your VAX), you just switch to another screen and
+resume working.
+
+The compiler seems to be pretty good.  It compiled (and the loader
+loaded) several long complicated programs.  We have had three problems
+with it.  It does not do structure passing correctly (it generates bad
+code).  (It does, however, do structure assignment right.)  The printf
+library routine recognizes the "%04x" convention, and not the "%.4x"
+one, causing incompatibility with some systems.  The last thing is that
+it does NOT have a bug that the VAX compiler has.  The vax compiler
+fails to sign extend when casting a short to an unsigned.  (Yes, K&R
+requires to lengthen first, then unsignify -- thus sign extension should
+occur.  It automatically works on any machine where sizeof int == sizeof
+short.) The XENIX compiler does it right, resulting in nonportability.
+(The chksum routine in uucp depends on this bug to run on the VAX, by
+the way.)
+
+The board comes with 22 floppies (with XENIX and the IOP software and a
+diagnostic program) and 6 notebooks.  5 of them are XENIX documentation
+and one is for the board itself.  The documentation is not the best,
+however, and I had to make a few phone calls (though mostly for stuff no
+one else is interested in, I admit.)
+
+The hardware seems to be very solid.
+
+There are a few problems with the system.  About once a week, it trashes
+a block of inodes, and we have to patch or restore the root.
+
+We run UUCP every hour to a VAX.  Once in a while when the system is
+busy, UUCP gets one of its alarm signals while it is opening the tty it
+uses.  It sometimes leaves the inode for the tty locked, which allows no
+one to open it, and makes ps hang (because he likes to look at ttys).
+The system loses characters when UUCP runs at faster than 1200 baud.
+
+The debugger adb gives an "I/O error" when you try to run with a
+breakpoint set, but seems to work anyway.  Sometimes setting a
+breakpoint seems to trash location 0xFFE, but maybe adb just makes it
+look like it was trashed.  (Adb does a good job of disassembling 68000
+code, though!)
+
+For some reason /etc/dmesg does not work.
+
+These problems are annoying, but I have run on PDP-11 V7 systems that
+were more flakey than this one, and it gets the job done.
+
+I would appreciate hearing comments from anyone else using this board,
+anyone else using another plug-in processor for the PC and, anyone
+running a Unix derivitive on the PC or one of its plug-in boards.
+
+Dave
+Dave@ucla-locus

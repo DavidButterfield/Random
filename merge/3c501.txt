@@ -1,0 +1,129 @@
+
+                      Locus Bridge Network Drivers
+                       Preliminary Specification
+
+                          David A. Butterfield
+                      Locus Computing Corporation
+                              June 1, 1984
+
+This briefly describes the Locus Bridge Network driver interface.  This
+interface allows the Bridge application some flexibility in automatic
+routing of incoming packets.  In this paper, the "application" is the
+Bridge Software which is making use of the network driver.
+
+There are three routines which are accessible from outside the driver.
+There is an "initialization" routine, which resets the hardware and
+driver and enables or disables network receives.  This routine also
+places the local station address into a 6 byte data area passed by the
+Bridge to the driver.
+
+The second routine is the "send" routine, which arranges for a packet to
+be sent out over the network.  An application-specified routine is
+called when transmission of the packet is complete.
+
+When a packet is received, the Bridge "stream select" field is examined
+to determine to which of several data streams this packet belongs.  A
+routine specified by the Bridge Software is called, on a per-stream
+basis.  The packet may have optionally been copied from the network
+interface into the application buffer prior to calling the routine.
+
+The application's receive routine may call the third driver routine, the
+"empty" routine, if it wishes.  This routine copies a specified number
+of bytes from the network into a specified address.
+
+The routines called from the application return with the segment
+registers intact; other registers may be modified.
+
+
+netinit proc far -- called to initialize the interface and the driver
+     The fields of this table may be modified by the application at
+     suitable times if desired.  For instance, double buffering may be
+     achieved by having the sel_routine switch the sel_addr to another
+     buffer.
+Upon entry:
+register al    initialization flag
+     0 = turn off the network
+     1 = turn on the network
+register es:di
+     address of the select table, which appears as follows:
+          byte  sel_max       the highest select number allowed
+          byte  6 dup (0)     6 byte area to be filled with the station address
+          word  pkt_select    the offset of the packet select field in the pkt
+          word  pkt_count     the offset of the packet text count field in pkt
+          dword sel_error     the address of the network error routine
+          dword sel_sendint   the address of the send completion routine
+        { dword sel_routine   the address of select 0 receive routine
+        { dword sel_addr      the address of a packet buffer / an argument
+        { byte  sel_copy      tells whether to copy the packet into sel_addr
+     .--{                          0 = do not copy
+     |  {                          1 = copy
+     |  { byte  sel_busy      tells whether the buffer is currently available
+     |                             0 = buffer available
+     |                             1 = buffer in use
+     |
+     `--{ (repeat for each entry from zero to sel_max)
+Upon return:
+register al    error code
+     00 = no error
+     otherwise = error
+
+
+netsend proc far -- called to send a packet
+     If the network is not currently doing a send, the send is performed
+     immediately.  Otherwise the packet is queued to be sent later.  The
+     packet may not be modified by the application until the send
+     completion routine is called (see below).
+Upon entry:
+register es:di
+     address of the packet, which appears as follows:
+          word  outpkt_size   gives the size in bytes of the packet data
+          bytes outpkt_data   the packet data to be sent
+Upon return:
+register al    status code
+     00 = packet sent
+     ff = packet queued to be sent
+     fe = packet couldn't be queued because queue was full
+
+
+sel_sendint proc far -- application routine called upon send completion
+     If the send fails, this routine is called after the sel_error
+     routine.
+Upon call:
+register es:di
+     address of the send packet which was passed to netsend
+register al    error code
+     00 = no error
+     otherwise hardware error
+
+
+sel_routine proc far -- called at interrupt time when packet received.
+Upon call:
+register es:di buffer address
+     value from select/address table entry
+register ds:si table entry address
+     pointer to table entry
+register cx    packet count
+     number of bytes in the received packet
+register ax    text count
+     text count from text count field of received packet
+
+
+sel_error proc far -- called at interrupt time on send/receive errors
+Upon call:
+register ah    send/receive flag
+     0 = receive, 1 = send
+register al    error code
+
+
+netempty proc near -- called to get bytes from the network packet buffer.
+     May be called from the sel_routine.
+Upon entry:
+register ax    packet offset
+     the byte number in the packet where the transfer should begin
+register cx    count
+     the number of bytes to transfer
+register es:di destination address
+     address where the bytes should be put
+Upon return:
+register al:   error code
+     0 = OK, otherwise error
