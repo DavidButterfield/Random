@@ -17,7 +17,7 @@ While a high-school junior I wrote the program my school used to compute student
 
 <b>1975: DEC PDP-11/45 Minicomputer</b> &mdash; PDP-11 assembly language, FORTRAN    
 <SMALL><em>Realtime graphics for a flight simulator; Floating-point format conversion from Xerox Sigma V; Device drivers</em></SMALL>    
-![1975 PDP-11/45](https://github.com/DavidButterfield/Random/blob/master/PRE-1983/pdp11-45.jpg "1975 Digital Equipment Corporation PDP-11/45 minicomputer")
+![1975 PDP-11/45](https://github.com/DavidButterfield/Random/blob/master/PRE-1983/DEC_PDP11-45.jpg "1975 Digital Equipment Corporation PDP-11/45 minicomputer")
 
 <b>1976: Altair 8800 Personal Computer</b> &mdash; 8080 assembly language, C    
 <SMALL><em>Owned and built by my college roommate Jim</em></SMALL>    
