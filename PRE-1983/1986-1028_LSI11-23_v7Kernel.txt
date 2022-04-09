@@ -1,0 +1,76 @@
+Date:           Tue, 28 Oct 86 19:58:33 PST
+From:           David Butterfield <dave>
+To:             Bill D'Camp <bill@LOGICON.ARPA>
+CC:             jbrown
+Subject:        Unix on an LSI-11/23
+In-reply-to:    Message of 28 Oct 86 11:58 PST
+                    from "Bill D'Camp <bill@LOGICON.ARPA>"
+
+> I recently posted a note to unix-wizards requesting info on anyone who
+> had any version of UNIX running on an LSI-11/23.  A response from Jordan
+> Brown at your site indicated that you had v7 running on such a machine,
+> is this true?  If so, what had to be done to get it running.  
+> 
+> I have a potential customer who needs some version of UNIX which runs
+> on an LSI-11/23, not to be confused with a PDP-11/23+.  Can you give
+> me any information?
+
+Let's see, that was a long time ago.  I did the initial bringup in 1979
+on a '23 with 256K of memory and two double-density RK05's (total of
+10 megabytes disk).  This was rather painful, so we got a Kennedy 70MB
+disk and that helped a lot.  The kernel had plenty of drivers (for a '23)
+to handle the two kinds of disk, the RX01's, a couple of plotters, and
+an assortment of terminals.  Needless to say it didn't fit in 64K.
+
+What I had to do was move the buffers out of kernel space, and use
+kernel overlays for the kernel text.  I don't remember if I ended
+up moving the clists out of kernel space.  So the eight 8K kernel
+segments looked (if I recall correctly) like:
+
+	virtual		contents
+
+	160000		Device registers
+	140000		Kernel data 4
+	120000		Kernel data 3
+	100000		Kernel data 2
+	 60000		Kernel data 1
+	 40000		Kernel text overlay segment
+	 20000		Kernel text (and a little data I think)
+	     0		Kernel text, incl. vectors and overlay code
+
+The mechanism to switch the text overlay segments around was
+transparant to the kernel C code; it was done with a hack to the
+linker (ld) and some assembly support in the kernel and bootstrap.
+I don't remember which segment got used to map in the buffers.
+Anyway, by moving the buffers out, the data space fit in about
+four-and-a-half segments, and the base text in one-and-a-half,
+and I could have an arbitrary amount of text in the overlay segment.
+
+We had students mostly editing (not with vi -- it didn't fit; I
+wrote a little screen editor for them to use).  The system became
+unbearably slow when you added the fourth user.  We then augmented
+the system by adding another 256K of memory (to make a total of 512K),
+and added an external Z80-based system to handle the terminals.
+The '23 communicated with the Z80 via custom circuitry on a Q BUS
+foundataion module that a friend of mine designed and built.
+Nowadays you can get DMA serial boards for the Q BUS, so this
+would be extreme today.
+
+We ran into a little snag with the extra memory.  Our disk controller
+board would only address 18 bits on the Bus, rather than the 22 bits
+required to address beyond 256KB.  To get data into the upper 256K
+I had to read it in down low, and then copy it up.  To reduce the
+overhead, I changed the bootstrap to load the kernel up high, since
+it is static and never swaps anyway.  I then added a system call
+similar to exec, that made a program text load as high as possible
+and then locked it there.  I put some commonly-used programs there,
+like the shell, ls, editor, and so forth.  The entire lower 256K
+was thus used for more transient things.  With these enhancements,
+the system became unbearably slow when you added the eighth user.
+(Remember, this was students mostly editing and running the
+Pascal interpreter.)
+
+Ah, those were the good old days when the kernel was still
+understandable by one person.
+
+Dave Butterfield
