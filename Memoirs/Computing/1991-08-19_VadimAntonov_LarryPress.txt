@@ -1,0 +1,204 @@
+Date: Fri 6 Sep 91 11:46:51-PDT
+From: Laurence I. Press <LPRESS@ISI.EDU>
+
+Copyright, Larry Press, August 26, 1991, do not reproduce or quote without
+permission. This file may be forwarded around the net as long as this note is
+attached.
+
+A Computer Network for Democracy and Development
+Larry Press
+
+   "Oh, do not say. I've seen the tanks with my own eyes. I
+   hope we'll be able to communicate during the next few days.
+   Communists cannot rape the Mother Russia once again!"
+
+This message was sent from Moscow at 5:01 AM on August 19. It was written by
+26 year-old Vadim Antonov, a senior programmer at the Demos Cooperative in the
+Soviet Union. Demos operates a computer-based communication network which
+spans the Soviet Union, and within a few hours, Vadim's message had been
+relayed to computers in 70 Soviet cities from Leningrad in the West to
+Vladivostok in the East.
+
+The message had also been sent to a computer in Helsinki Finland, which is
+connected to the non-Soviet computer networks. From Finland, the message was
+relayed to networks such as The Internet, serving millions of users on all
+continents. Seconds after it reached Finland, I could read it at my computer
+in Los Angeles, California. The message was particularly important to me
+because the week before the coup attempt I had been in Moscow and spent several
+days with Vadim and his colleagues at Demos. We met professionally and as
+friends.
+
+Demos' RELCOM (RELiable COMmunication) network celebrated the first birthday of
+its link to Finland on August 22. During that first year, RELCOM spread to 70
+Soviet cities, and over 400 organizations were using it -- universities,
+research institutes, stock and commodity exchanges, news services, high
+schools, politicians, and government agencies. As is typical with computer
+networks, noone knows how many users RELCOM actually reaches.
+
+During the Coup
+
+During the days of the coup, RELCOM was pressed into service in support of the
+constitutional government. The junta moved quickly to control mass media.
+When I learned of the coup, I immediately sent a worried message to Vadim's
+wife Polina Antonova, who also works at Demos. I did not receive her answer
+until August 20 at 12:17 AM Moscow time:
+
+   "Dear Larry,
+
+   Don't worry, we're OK, though frightened and angry. Moscow is
+   full of tanks and military machines -- I hate them. They try
+   to close all mass media, they stopped CNN an hour ago, and
+   Soviet TV transmits opera and old movies. But, thank Heaven,
+   they don't consider RELCOM mass media or they simply forgot
+   about it. Now we transmit information enough to put us in
+   prison for the rest of our life.
+
+   Greetings from Natasha.
+
+   Cheers,
+   Polina."
+
+The Demos staff had learned of the coup around 6 AM on the 19th, and
+immediately began sending political information to the Soviet Union and the
+outside world. By 12:30 PM, Moscow time, I was reading news releases from the
+independent Soviet news agency Interfax. Although outlawed by the junta, news
+from Interfax, the Radio Moscow World Service, the Russian Information Agency,
+Northwest Information Agency (Leningrad), and Baltfax was disseminated by
+RELCOM throughout the coup attempt.
+
+RELCOM also distributed news from official sources opposed to the coup. For
+example, a copy of the letter Boris Yeltsin read from a tank turret in front of
+the Russian Parliament building was brought to Demos headquarters (a short
+trip), entered into a computer, and forwarded across the network. By early
+evening, several people in the United States had also translated it, and an
+English-language version was broadcast to the non-Soviet networks.
+
+There were also many eye-witness reports. Pay phones were working in Moscow,
+and people in the streets could phone news in. At one point, Polina told me
+she was leaving for the Russian Parliament Building with a portable computer so
+she could report from there. Later I learned that she had not gone because the
+phone service to the building was unreliable.
+
+Of course all the news did not come from Moscow. The network was buzzing with
+reports and official notices from Leningrad, Kiev, the Baltic capitals, and
+many other Soviet cities.
+
+News also came in from the West. I wrote regular summaries of the news as
+broadcast on radio and television in the United States. Jonathan Grudin, a
+colleague in Denmark, did the same for BBC news. Regular reports were also
+posted from Finland, giving both Finnish and Baltic news summaries. These were
+translated into Russian by Polina and others, and transmitted throughout the
+Soviet Union.
+
+Western news was welcome, but the link to Finland became a bottleneck. Before
+the coup, 6,000 messages were passed between Finland and RELCOM on a typical
+day. After the coup began, traffic increased substantially, prompting Vadim to
+broadcast this message at 6:44 PM on the 19th:
+
+   "Please stop flooding the only narrow channel with bogus messages
+   with silly questions. Note that it's neither a toy nor a means to
+   reach your relatives or friends. We need the bandwidth to help
+   organize the resistance. Please, do not (even unintentionally)
+   help these fascists!"
+
+This plea notwithstanding, traffic rose to a high of 13,159 messages on the
+21st.
+
+While news of tank movements, demonstrations, and official political statements
+was of practical value, it also provided emotional support. When the coup was
+finished, and there was time to rest, I received a message from Polina that
+said in part "You can't even imagine how grateful we are for your help and
+support in this terrible time! The best thing is to know that we aren't
+alone." That message paid me 1,000 times for the hours spent at my computer
+keyboard.
+
+Danger
+
+At the beginning of the coup, memories of the Hungarian revolt, Kruschev's
+ouster, the Prague Spring, and Tiananmen Square did not give one much hope.
+Had the coup succeeded, the Demos staff and people using their network would
+have been in great danger. As Vadim noted in a message to Doug Jones, a
+professor at the University of Iowa:
+
+   "If these dogs win, for certain they'll throw us in prison --
+   we distributed the proclamation from Yeltsin and the Moscow
+   and Leningrad Soviets throughout the entire Soviet Union,
+   together with the forbidden communiques from Interfax ...
+   Greetings from the underground."
+
+Demos headquarters is in a small building near the Kremlin. The KGB knew of
+RELCOM, and had they decided to, they could have easily shut the network off
+early in the coup. When a friend asked why they didn't, Polina replied "Thank
+Heaven, these cretins don't consider us mass media!" After the coup, she and
+others speculated that the KGB was generally passive because they were not
+confident the coup would succeed.
+
+Sensing danger, the Demos staff arranged for backup computers to substitute for
+the vulnerable headquarters machine if necessary. On the 20th at 8:30 PM
+Moscow time, Vadim sent this message to Doug Jones:
+
+   "Yes, we already prepared to shift to underground; you know --
+   reserve nodes, backup channel, hidden locations. They'll have
+   a hard time catching us! Anyway, our main communication line
+   is still open and it makes us more optomistic."
+
+They not only hid the computers, many people left Demos headquarters and
+communicated from their homes and other locations. Polina told me:
+
+   "Don't worry; the only danger for us is if they catch and
+   arrest us, as we are sitting at home (valera is at Demos) and
+   distributing all the information we have."
+
+When the coup was finally defeated, George Tereshko, broadcast the following
+thanks for the risk taken by the Demos staff:
+
+   "When the dark night fell upon Moscow, RELCOM was one source of
+   light for us. Thanks to these brave people we could get
+   information and hope."
+
+Of course, for now, the story appears to have had a happy ending. At 3:07 PM
+on the 21st, I received this from Polina:
+
+   "Really good news. Right now we're listening to Radio Russia
+   (without any jamming!); they told that the eight left Moscow,
+   noone knows where ... Hard to believe ... Maybe, they've
+   really run away?"
+
+And on the 22nd at 1:31 PM she wrote:
+
+   "Now Vadim and I have to do our usual work (that's so nice!)
+   and Valera and Mike Korotaev went to sleep. They were on duty
+   the whole night. Now there is celebration in Moscow. We just
+   watched president Gorbachev on TV."
+
+RELCOM in Peace Time
+
+In the past, a network like RELCOM would have been prohibited in the Soviet
+Union. Like any communication media, it is incompatible with repressive
+dictatorship. Gorbachev's Glasnost made RELCOM possible, and in one year, it
+became a significant segment of the Soviet communication infrastructure.
+
+Part of the reason for RELCOM's success is the fact that postal and telephone
+service in the Soviet Union are poor, making electronic mail very attractive.
+Another element of their success is that they use low-cost, appropriate
+technology. The primary technology used by RELCOM is the voice phone system,
+low cost modems, and standard personal computers. The final element in their
+success is the people at Demos. They are very skillful as technicians and as
+entrepreneurs (Demos is 100% free enterprise), yet they are different than
+their counterparts in the United States. They are more idealistic and less
+competitive. If they were in the US, my guess is they would either be graduate
+students in computer science or they would be driving BMWs and sipping Perrier.
+
+As such, RELCOM may be a good model for other countries with poor
+telephone and postal systems, little capital, and well educated,
+motivated young professionals. Networks like RELCOM, probably
+using satellite technology, may change the face of the earth in
+peace time as well as helping to keep the peace.
+
+    [Larry Press is Professor of Computer Information Systems at California State
+    University at Dominguez Hills. He has visited Chile several times, most
+    recently as an organizer of the EIES held last July. The week before the
+    coup, Press co-chaired a conference on human-computer interaction in Moscow.
+    While there, he spent several days visiting the Demos Cooperative, which
+    operates RELCOM, an important Soviet computer network. During the coup, he
+    relayed news to his friends at Demos.]
